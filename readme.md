@@ -49,8 +49,10 @@ Durante o desenvolvimento com o Visual Studio Code (VSCode), para que o processo
 Quando necessário compilar o código da aplicação, utilize no terminal:
 
 ```
-make
+make run
 ```
+
+> Caso seja de interesse **somente** compilar o código, sem executá-lo logo em seguida, utilize somente `make`
 
 Caso seja necessário realizar uma limpeza dos arquivos locais, utilize no terminal:
 

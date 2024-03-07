@@ -10,5 +10,5 @@ void compress(char *input, char *output)
     printf("Comprimindo arquivo %s para %s\n", input, output);
 
     // Cria a árvore de Huffman
-    huffman_tree *tree = create_huffman_tree();
+    printf("Criando árvore de Huffman...\n");
 }

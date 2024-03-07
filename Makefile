@@ -1,24 +1,26 @@
-# Makefile para automatizar a compilação do projeto
+# Makefile para automatizar a compilação e execução do projeto
 
 # Nome do executável gerado
-TARGET = huffman
+TARGET = ./build/huffman
 
 # Diretórios de origem
 CORE_DIR = ./core
-SRC_DIR = $(CORE_DIR)/modules
 BUILD_DIR = ./build
 
-# Obter todos os arquivos .c em SRC_DIR
-SRCS := $(wildcard $(SRC_DIR)/*.c) $(wildcard $(CORE_DIR)/*.c)
+MODULES_DIR = $(CORE_DIR)/modules
 
-# Gere os nomes dos arquivos de objeto com base nos arquivos fonte
+# Obtemos todos os arquivos .c em CORE_DIR
+SRCS := $(wildcard $(CORE_DIR)/*.c) $(wildcard $(MODULES_DIR)/*.c)
 OBJS := $(SRCS:$(CORE_DIR)/%.c=$(BUILD_DIR)/%.o)
+
+# Adiciona main.c ao TARGET (não é necessário incluir em OBJS)
+SRCS += main.c
 
 # Opções de compilação
 CC = gcc
-CFLAGS = -Wall -I$(CORE_DIR)
+CFLAGS = -Wall -I$(CORE_DIR) -I$(MODULES_DIR) # Inclua ambos os diretórios
 
-# Comando para criar o diretório de build, se não existir
+# Comando para criar o diretório de build e os subdiretórios necessários
 MKDIR_P = mkdir -p
 
 # Alvo padrão
@@ -32,13 +34,17 @@ $(TARGET): $(OBJS)
 $(BUILD_DIR)/%.o: $(CORE_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Comando para criar o diretório de build
+# Comando para criar o diretório de build e os subdiretórios necessários
 $(BUILD_DIR):
-	$(MKDIR_P) $(BUILD_DIR)
+	$(MKDIR_P) $(dir $(OBJS))
 
-# Limpar arquivos de compilação e o executável
+# Alvo para executar o programa após a compilação
+run: all
+	./$(TARGET)
+
+# Limpamos arquivos de compilação e o executável
 clean:
-	rm -rf $(BUILD_DIR) $(TARGET)
+	rm -rf $(BUILD_DIR)
 
 # Define "clean" como um alvo phony, ou seja, não corresponde a um arquivo real
-.PHONY: clean
+.PHONY: clean run

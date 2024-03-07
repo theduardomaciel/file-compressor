@@ -1,9 +1,6 @@
 #ifndef HEAP_H
 #define HEAP_H
 
-#include <stdio.h>
-#include <stdlib.h>
-
 typedef struct
 {
     int size;
