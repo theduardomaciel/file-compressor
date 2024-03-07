@@ -12,9 +12,6 @@
 
 Um compactador e descompactador de arquivos com base no Algoritmo de Huffman, desenvolvido como AV2 da disciplina de Estrutura de Dados por discentes do curso de Ciência da Computação.
 
-> [!NOTE]
-> Os arquivos restantes do projeto estão disponíveis em: [https://drive.google.com/drive/folders/1iTDoScdPs6Fg8qhWdWpXTZJ1RoaVnmYH?usp=sharing](https://drive.google.com/drive/folders/1iTDoScdPs6Fg8qhWdWpXTZJ1RoaVnmYH?usp=sharing)
-
 #### 🧭 Disponível inicialmente para Terminal
 
 <br />
@@ -32,8 +29,6 @@ Um compactador e descompactador de arquivos com base no Algoritmo de Huffman, de
 
 <br />
 
-<br />
-
 ## 🧠 Princípios
 
 1.  Ser capaz de **compactar e descompactar** QUALQUER tipo de arquivo
@@ -41,10 +36,14 @@ Um compactador e descompactador de arquivos com base no Algoritmo de Huffman, de
 3.  Todas as estruturas de dados devem ser implementadas com `*void`
 4.  Toda as estruturas de dados utilizadas no projeto devem possuir **Casos de Testes Unitários**
 
+<br />
+
 ## 🔧 Compilação e execução
 
 A fim de facilitar o processo de _compilação_ do código durante a fase de desenvolvimento e testes, tendo em visto o alto grau de modularização do projeto, o repositório faz uso de um arquivo `Makefile`, responsável por lidar com o gerenciamento de dependências nos arquivos `.c`.  
 Durante o desenvolvimento com o Visual Studio Code (VSCode), para que o processo de _build_ ocorra corretamente, [baixe a extensão](https://marketplace.visualstudio.com/items?itemName=ms-vscode.makefile-tools) disponibilizada pela Microsoft para esse tipo de arquivo.
+
+<br />
 
 Quando necessário compilar o código da aplicação, utilize no terminal:
 
@@ -54,11 +53,15 @@ make run
 
 > Caso seja de interesse **somente** compilar o código, sem executá-lo logo em seguida, utilize somente `make`
 
+<br />
+
 Caso seja necessário realizar uma limpeza dos arquivos locais, utilize no terminal:
 
 ```
 make clean
 ```
+
+<br />
 
 #### Diferença entre arquivos `.c` e `.h`
 
@@ -91,6 +94,7 @@ make test
 
 - [ ] Desenvolver os módulos de `heap` e `árvore de huffman` para utilização nos processos de compressão e descompressão
 - [ ] Implementar o algoritmo básico para compressão de textos (char\*)
+- [ ] Criar casos de testes unitários para as estruturas de dados usadas
 
 <br />
 
