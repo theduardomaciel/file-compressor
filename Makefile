@@ -8,9 +8,10 @@ CORE_DIR = ./core
 BUILD_DIR = ./build
 
 MODULES_DIR = $(CORE_DIR)/modules
+UTILS_DIR = $(CORE_DIR)/utils
 
 # Obtemos todos os arquivos .c em CORE_DIR
-SRCS := $(wildcard $(CORE_DIR)/*.c) $(wildcard $(MODULES_DIR)/*.c)
+SRCS := $(wildcard $(CORE_DIR)/*.c) $(wildcard $(MODULES_DIR)/*.c) $(wildcard $(UTILS_DIR)/*.c)
 OBJS := $(SRCS:$(CORE_DIR)/%.c=$(BUILD_DIR)/%.o)
 
 # Adiciona main.c ao TARGET (não é necessário incluir em OBJS)
@@ -18,7 +19,7 @@ SRCS += main.c
 
 # Opções de compilação
 CC = gcc
-CFLAGS = -Wall -I$(CORE_DIR) -I$(MODULES_DIR) # Inclua ambos os diretórios
+CFLAGS = -Wall -I$(CORE_DIR) -I$(MODULES_DIR) -I$(UTILS_DIR) # Inclua ambos os diretórios
 
 # Comando para criar o diretório de build e os subdiretórios necessários
 MKDIR_P = mkdir -p

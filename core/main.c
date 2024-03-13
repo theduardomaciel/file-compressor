@@ -6,32 +6,31 @@
 #include "compress.h"
 #include "decompress.h"
 
-int main()
+int main(int argc, char *argv[])
 {
-    // Damos possibilidade ao usuário escolher se deseja comprimir ou descomprimir
-    printf("Digite 'c' para comprimir ou 'd' para descomprimir: ");
+    // Damos possibilidade ao usuário escolher se deseja comprimir ou descomprimir por meio de argumentos
+    // Caso o usuário não escolha nenhuma das opções, o programa irá encerrar
 
-    char option;
-    scanf("%c", &option);
-
-    switch (option)
+    if (argc < 2)
     {
-    case 'c':
-        compress("input.txt", "output.txt");
-        break;
+        printf("Usage: %s [-c | -d] <file>\n", argv[0]);
+        return 1;
+    }
 
-    case 'd':
-        decompress("output.txt", "decompressed.txt");
-        break;
-
-    case 'e':
-        printf("Saindo...\n");
-        break;
-
-    default:
-        printf("Opção inválida\n");
-        scanf("%c", &option);
-        break;
+    // Caso o usuário insira "-c" o programa irá comprimir o arquivo
+    if (strcmp(argv[1], "-c") == 0)
+    {
+        compress(argv[2]);
+    }
+    // Caso o usuário insira "-d" o programa irá descomprimir o arquivo
+    else if (strcmp(argv[1], "-d") == 0)
+    {
+        decompress(argv[2]);
+    }
+    else
+    {
+        printf("Usage: %s [-c | -d] <file>\n", argv[0]);
+        return 1;
     }
 
     return 0;

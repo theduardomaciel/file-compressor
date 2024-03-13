@@ -35,6 +35,7 @@ Um compactador e descompactador de arquivos com base no Algoritmo de Huffman, de
 2.  Todos os Tipos Abstratos de Dados (TADs) devem ser **documentados**
 3.  Todas as estruturas de dados devem ser implementadas com `*void`
 4.  Toda as estruturas de dados utilizadas no projeto devem possuir **Casos de Testes Unitários**
+5.  Padronização do código deve ser feita toda em `snake_case`
 
 <br />
 
@@ -93,7 +94,7 @@ make test
 ## 🚧 Roadmap
 
 - [ ] Desenvolver os módulos de `heap` e `árvore de huffman` para utilização nos processos de compressão e descompressão
-- [ ] Implementar o algoritmo básico para compressão de textos (char\*)
+- [ ] Implementar o algoritmo básico para compressão utilizando char\*
 - [ ] Criar casos de testes unitários para as estruturas de dados usadas
 
 <br />
