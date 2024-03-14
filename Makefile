@@ -41,7 +41,7 @@ $(BUILD_DIR):
 
 # Alvo para executar o programa após a compilação
 run: all
-	./$(TARGET)
+	./$(TARGET) $(filter-out $@,$(MAKECMDGOALS))
 
 # Limpamos arquivos de compilação e o executável
 clean:

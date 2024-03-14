@@ -6,30 +6,39 @@
 #include "compress.h"
 #include "decompress.h"
 
+void print_usage()
+{
+    printf("Uso: [compress | decompress] <nome do arquivo com extensão>\n");
+}
+
 int main(int argc, char *argv[])
 {
-    // Damos possibilidade ao usuário escolher se deseja comprimir ou descomprimir por meio de argumentos
-    // Caso o usuário não escolha nenhuma das opções, o programa irá encerrar
-
-    if (argc < 2)
+    /* printf("%d\n", argc);
+    for (int i = 0; i < argc; i++)
     {
-        printf("Usage: %s [-c | -d] <file>\n", argv[0]);
+        printf("%s\n", argv[i]);
+    } */
+
+    // Verificamos se o usuário passou os argumentos corretamente
+    // Caso não, exibimos a mensagem de uso e encerramos o programa
+
+    if (argc < 3)
+    {
+        print_usage();
         return 1;
     }
 
-    // Caso o usuário insira "-c" o programa irá comprimir o arquivo
-    if (strcmp(argv[1], "-c") == 0)
+    if (strcmp(argv[1], "compress") == 0)
     {
         compress(argv[2]);
     }
-    // Caso o usuário insira "-d" o programa irá descomprimir o arquivo
-    else if (strcmp(argv[1], "-d") == 0)
+    else if (strcmp(argv[1], "-decompress") == 0)
     {
         decompress(argv[2]);
     }
     else
     {
-        printf("Usage: %s [-c | -d] <file>\n", argv[0]);
+        print_usage();
         return 1;
     }
 

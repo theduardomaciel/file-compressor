@@ -25,7 +25,7 @@ char *read_file(FILE *file)
 {
     fseek(file, 0, SEEK_END);
     long length = ftell(file);
-    fseek(file, 0, SEEK_SET);
+    fseek(file, 0, SEEK_SET); // rewind(file);
 
     char *buffer = malloc(length + 1);
     fread(buffer, 1, length, file);
@@ -48,14 +48,6 @@ char *extract_filename(const char *filename)
 
     return extracted;
 }
-
-/* char *extract_string_from_file(FILE *file)
-{
-    char *string = read_file(file);
-    close_file(file);
-
-    return string;
-} */
 
 void write_string_to_file(FILE *file, char *string)
 {

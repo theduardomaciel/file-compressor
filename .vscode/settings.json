@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        ".env.*": "dotenv",
+        "*.css": "css",
+        ".env.example": "properties",
+        "heap.h": "c",
+        "file_io.h": "c",
+        "frequency_table.h": "c",
+        "string": "c",
+        "array": "c",
+        "string_view": "c"
+    },
+    "cSpell.words": [
+        "huffman"
+    ]
+}

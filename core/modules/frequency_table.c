@@ -1,16 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define MAX_POSSIBLE_BYTE_VALUE 256
 
-static unsigned *frequency_table(const unsigned char *string)
+int *new_frequency_table(const char *data)
 {
     // Utilizamos o calloc para garantir que todos os valores da tabela sejam inicializados com 0
-    unsigned *freq = calloc(sizeof(unsigned), MAX_POSSIBLE_BYTE_VALUE);
+    int *freq = calloc(sizeof(int), MAX_POSSIBLE_BYTE_VALUE);
 
-    for (int i = 0; string[i] != '\0'; i++)
+    for (int i = 0; i < strlen((char *)data); i++)
     {
-        freq[string[i]]++;
+        freq[(unsigned char)data[i]]++;
     }
 
     return freq;
