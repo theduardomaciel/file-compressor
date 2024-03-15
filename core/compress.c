@@ -26,12 +26,14 @@ void compress(FILE *input, char *output_path)
     print_pre_order(tree);
     print_tree_visually(tree, 0, '-');
 
-    /*
-        FILE *output_file = open_file(output_path, "wb");
-        // Somente criamos o arquivo de saída agora, para não gastar recursos caso nos deparemos com algum erro durante a compressão
+    FILE *output_file = open_file(output_path, "wb");
+    // Somente criamos o arquivo de saída agora, para não gastar recursos caso nos deparemos com algum erro durante a compressão
 
-        // Realizamos a escrita do arquivo
+    // Construímos o caminho que forma os bytes com base na árvore de Huffman
 
-        close_file(output_file);
-    */
+    // Realizamos a escrita do cabeçalho
+
+    // Realizamos a escrita do arquivo
+
+    close_file(output_file);
 }

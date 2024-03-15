@@ -5,7 +5,7 @@
 #include "priority_queue.h"
 
 /*
-    * Macros úteis
+    ⮕ Macros úteis
     São usados para calcular o índice do filho esquerdo, direito e pai de um nó
 */
 #define LEFT(x) (2 * (x) + 1)
@@ -13,7 +13,7 @@
 #define PARENT(x) ((x) / 2)
 
 /*
-    Funções estáticas
+    ⮕ Declarações das funções estáticas
     São funções que só podem ser acessadas por funções deste arquivo
 */
 
@@ -32,6 +32,11 @@ void pq_heapify(priority_queue *pq, size_t index);
  * @param b O endereço do segundo ponteiro.
  */
 void swap(void **a, void **b);
+
+/*
+    ⮕ Funções públicas
+    São funções que podem ser acessadas por qualquer arquivo que inclua este arquivo
+*/
 
 // Função para inicializar a fila de prioridade
 priority_queue *init_priority_queue(int capacity, int (*comparator)(const void *d1, const void *d2))
@@ -127,6 +132,8 @@ void *pq_dequeue(priority_queue *pq)
 
     return (data);
 }
+
+// ⮕ Funções estáticas
 
 void pq_heapify(priority_queue *pq, size_t index)
 {

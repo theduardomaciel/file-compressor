@@ -8,6 +8,11 @@
 #include "huffman_tree.h"
 #include "priority_queue.h"
 
+/*
+    ⮕ Funções públicas
+    São funções que podem ser acessadas por qualquer arquivo que inclua este arquivo
+*/
+
 huffman_node *ht_init()
 {
     huffman_node *tree = malloc(sizeof(huffman_node));
@@ -33,7 +38,7 @@ int compare(const void *d1, const void *d2)
 
     if (n1->frequency == n2->frequency)
     {
-        return 0;
+        return 1;
     }
     else if (n1->frequency > n2->frequency) // cuidado com esse sinal! não inverta!
     {
@@ -43,27 +48,6 @@ int compare(const void *d1, const void *d2)
     {
         return 1;
     }
-}
-
-void pq_print(priority_queue *pq)
-{
-    NULL_POINTER_CHECK(pq);
-
-    if (pq == NULL)
-    {
-        DEBUG("A fila de prioridade não foi inicializada.\n");
-        return;
-    }
-
-    for (size_t i = 0; i < pq->size; i++)
-    {
-        huffman_node *node = (huffman_node *)pq->data[i];
-        uint8_t data = *(uint8_t *)node->data;
-
-        printf("%d (%ld)\n", data, node->frequency);
-        // para exibir texto: printf("%c (%ld)\n", (char *)data, node->frequency);
-    }
-    printf("\n");
 }
 
 priority_queue *build_priority_queue(uint64_t *frequency_table)
@@ -84,6 +68,8 @@ priority_queue *build_priority_queue(uint64_t *frequency_table)
             pq_enqueue(queue, ht_create_node(data, current_frequency, NULL, NULL));
         }
     }
+
+    pq_print(queue);
 
     return queue;
 }
@@ -120,13 +106,11 @@ huffman_node *build_huffman_tree(priority_queue *queue)
             uint64_t summed_frequencies = left->frequency + right->frequency;
             // printf("Frequências somadas (%ld + %ld): %ld\n", left->frequency, right->frequency, summed_frequencies);
 
-            printf("🖇️  Selecionando os dois nós com menor frequência para unir:\n");
-            /* printf("Esquerda: %c, freq.: %d | ", left->character, left->frequency);
-            printf("Direita: %c, freq.: %d\n", right->character, right->frequency);
-            printf("Logo, o novo pai %c possui frequência %d\n", parent->character, parent->frequency); */
-            printf("          \t\tEsquerda\tDireita\t\tPai\n");
-            printf("Caractere\t\t%d\t\t%d\t\t%c\n", *(uint8_t *)left->data, *(uint8_t *)right->data, '*');
-            printf("Frequência\t\t%d\t\t%d\t\t%d\n", left->frequency, right->frequency, summed_frequencies);
+            printf("🖇️  Unindo os dois nós com menores frequências:\n");
+            printf("\t\tNó pai: %c (%ld)\n", *(uint8_t *)parent_data, summed_frequencies);
+            printf("\t\t/\t\\\n");
+            printf("Nó esquerdo: %c (%ld)\t", *(uint8_t *)left->data, left->frequency);
+            printf("Nó direito: %c (%ld)\n", *(uint8_t *)right->data, right->frequency);
             printf("--------------------\n");
 
             pq_enqueue(queue, ht_create_node(parent_data, summed_frequencies, left, right));
@@ -134,6 +118,36 @@ huffman_node *build_huffman_tree(priority_queue *queue)
 
         return (huffman_node *)pq_dequeue(queue);
     }
+}
+
+// ⮕ Funções de impressão
+
+void pq_print(priority_queue *pq)
+{
+    NULL_POINTER_CHECK(pq);
+
+    if (pq == NULL)
+    {
+        DEBUG("A fila de prioridade não foi inicializada.\n");
+        return;
+    }
+
+    priority_queue *pq_copy = init_priority_queue(pq->capacity, pq->comparator);
+
+    for (size_t i = 0; i < pq->size; i++)
+    {
+        pq_enqueue(pq_copy, pq->data[i]);
+    }
+
+    printf("Fila de prioridade:\n");
+
+    while (pq_copy->size > 0)
+    {
+        huffman_node *node = (huffman_node *)pq_dequeue(pq_copy);
+        printf("%c (%lu)\n", *(uint8_t *)node->data, node->frequency);
+    }
+
+    printf("\n");
 }
 
 void print_pre_order(huffman_node *root)
@@ -157,7 +171,7 @@ void print_tree_visually(huffman_node *node, int level, char direction)
             printf("   ");
         }
 
-        printf("%c%c (%ld)\n", direction, *(uint8_t *)(char *)node->data, node->frequency);
+        printf("%c(%c)\n", direction, *(uint8_t *)node->data);
 
         print_tree_visually(node->left, level + 1, '\\');
     }
