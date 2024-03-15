@@ -1,16 +1,16 @@
 {
+    "cSpell.words": [
+        "heapify",
+        "huffman"
+    ],
     "files.associations": {
         ".env.*": "dotenv",
         "*.css": "css",
         ".env.example": "properties",
-        "heap.h": "c",
-        "file_io.h": "c",
+        "string.h": "c",
+        "stdlib.h": "c",
         "frequency_table.h": "c",
-        "string": "c",
-        "array": "c",
-        "string_view": "c"
-    },
-    "cSpell.words": [
-        "huffman"
-    ]
+        "priority_queue.h": "c",
+        "huffman_tree.h": "c"
+    }
 }

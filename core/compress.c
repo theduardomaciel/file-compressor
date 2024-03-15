@@ -1,27 +1,37 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
-#include "compress.h"
+#include "compression.h"
 
-#include "file_io.h"
 #include "utils.h"
+#include "file_io.h"
 
-#include "huffman_tree.h"
 #include "frequency_table.h"
+#include "priority_queue.h"
+#include "huffman_tree.h"
 
-#define MAX_BUFFER_SIZE 1000000
-#define MAX_POSSIBLE_BYTE_VALUE 256
-
-void compress(char *input)
+void compress(FILE *input, char *output_path)
 {
-    FILE *input_file = open_file(concat_strings("./input/", input), "r");
-    // FILE *output_file = open_file("compressed", "wb");
+    // Construímos a tabela de frequências com base no arquivo de entrada
+    uint64_t *frequency_table = build_frequency_table(input);
 
-    printf("🤏 Comprimindo arquivo `%s` para `%s`...\n\n", input, concat_strings(extract_filename(input), ".huff"));
+    // Construímos a fila de prioridade com base na tabela de frequências
+    priority_queue *pq = build_priority_queue(frequency_table);
 
-    char *data = read_file(input_file);
-    int *frequency = new_frequency_table(data);
+    // Construímos a árvore de Huffman com base na fila de prioridade
+    huffman_node *tree = build_huffman_tree(pq);
 
-    create_huffman_tree(frequency);
+    print_pre_order(tree);
+    print_tree_visually(tree, 0, '-');
+
+    /*
+        FILE *output_file = open_file(output_path, "wb");
+        // Somente criamos o arquivo de saída agora, para não gastar recursos caso nos deparemos com algum erro durante a compressão
+
+        // Realizamos a escrita do arquivo
+
+        close_file(output_file);
+    */
 }

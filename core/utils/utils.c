@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 char *concat_strings(const char *s1, const char *s2)
@@ -13,6 +14,12 @@ char *concat_strings(const char *s1, const char *s2)
 
 unsigned char set_bit(unsigned char c, int i)
 {
+    if (i < 0 || i > 7)
+    {
+        // printf("Índice fora do intervalo válido (0 a 7).\n");
+        return c;
+    }
+
     unsigned char mask = 1 << i;
     return mask | c;
 }

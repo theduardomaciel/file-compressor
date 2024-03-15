@@ -1,39 +1,30 @@
+#include <stdint.h>
+#include "priority_queue.h"
+
+#define MAX_SIZE 256
+// Para mais informações do porquê podemos usar o número 256, veja o arquivo docs/bytes.md
+
 #ifndef HUFFMAN_TREE_H
 #define HUFFMAN_TREE_H
 
-typedef struct huffman_tree_node huffman_tree_node;
-
-struct huffman_tree_node
+typedef struct huffman_node
 {
-    char character;
-    int frequency;
-    huffman_tree_node *left;
-    huffman_tree_node *right;
-    huffman_tree_node *next; // unimos as estruturas em uma lista encadeada
-};
+    void *data;
+    uint64_t frequency;
+    struct huffman_node *left;
+    struct huffman_node *right;
+} huffman_node;
 
-typedef struct
-{
-    huffman_tree_node *root;
-    char *stringfied;
-    char **paths;
-    int *char_frequency;
-} huffman_tree;
+huffman_node *ht_init();
 
-huffman_tree *create_huffman_tree(int *frequency);
+huffman_node *ht_create_node(void *data, uint64_t frequency, huffman_node *left, huffman_node *right);
 
-void add_huffman_tree_node(huffman_tree *tree, char character, int frequency);
+priority_queue *build_priority_queue(uint64_t *frequency_table);
 
-char **get_huffman_tree_paths(huffman_tree *tree);
+huffman_node *build_huffman_tree(priority_queue *queue);
 
-void insert_huffman_tree_node(huffman_tree *tree, huffman_tree_node *node);
+void print_tree_visually(huffman_node *node, int level, char direction);
 
-huffman_tree_node *merge_huffman_tree_nodes(huffman_tree_node *left, huffman_tree_node *right);
-
-char *convert_huffman_tree_to_string(huffman_tree *tree);
-
-huffman_tree_node *pop_huffman_tree_node(huffman_tree *tree);
-
-int is_leaf(huffman_tree_node *node);
+void print_pre_order(huffman_node *root);
 
 #endif // HUFFMAN_TREE_H
