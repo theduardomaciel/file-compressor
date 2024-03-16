@@ -46,13 +46,16 @@ Durante o desenvolvimento com o Visual Studio Code (VSCode), para que o processo
 
 <br />
 
-Quando necessário compilar o código da aplicação, utilize no terminal:
+Quando necessário executar a aplicação, utilize no terminal:
 
 ```
-make run
+make run INPUT=<nome do arquivo com extensão>
 ```
 
 > Caso seja de interesse **somente** compilar o código, sem executá-lo logo em seguida, utilize somente `make`
+
+> [!NOTE]
+> Os arquivos a serem compilados e descompilados devem ser inseridos na pasta `inputs`, presente na raiz do projeto.
 
 <br />
 
@@ -93,8 +96,8 @@ make test
 
 ## 🚧 Roadmap
 
-- [ ] Desenvolver os módulos de `heap` e `árvore de huffman` para utilização nos processos de compressão e descompressão
-- [ ] Implementar o algoritmo básico para compressão utilizando char\*
+- [x] Desenvolver os módulos de `heap` e `árvore de huffman` para utilização nos processos de compressão e descompressão
+- [x] Implementar o algoritmo básico para compressão
 - [ ] Criar casos de testes unitários para as estruturas de dados usadas
 
 <br />
@@ -102,10 +105,10 @@ make test
 ## 👥 Grupo
 
 - [ ] [Eduardo Maciel Alexandre](https://github.com/theduardomaciel)
-- [ ] Eliezir Moreira Peixoto Neto
+- [ ] [Eliezir Moreira Peixoto Neto](https://github.com/eliezir)
 - [ ] [Lucas Cassiano Maciel dos Santos](https://github.com/lucas7maciel)
-- [ ] [Maria Letícia Ventura de Oliveira](https://github.com/letsventura)
 - [ ] [Josenilton Ferreira da Silva Junior](https://github.com/914joseph)
+- [ ] [Maria Letícia Ventura de Oliveira](https://github.com/letsventura)
 
 <br />
 

@@ -1,7 +1,7 @@
 # Makefile para automatizar a compilação e execução do projeto
 
 # Nome do executável gerado
-TARGET = ./build/huffman
+TARGET = ./huffman
 
 # Diretórios de origem
 CORE_DIR = ./core
@@ -18,7 +18,7 @@ OBJS := $(SRCS:$(CORE_DIR)/%.c=$(BUILD_DIR)/%.o)
 SRCS += main.c
 
 # Opções de compilação
-CC = gcc
+CC = gcc -g
 CFLAGS = -Wall -I$(CORE_DIR) -I$(MODULES_DIR) -I$(UTILS_DIR) # Inclua ambos os diretórios
 
 # Comando para criar o diretório de build e os subdiretórios necessários
@@ -45,7 +45,7 @@ run: all
 
 # Limpamos arquivos de compilação e o executável
 clean:
-	rm -rf $(BUILD_DIR)
+	rm -rf $(BUILD_DIR) $(TARGET)
 
 # Define "clean" como um alvo phony, ou seja, não corresponde a um arquivo real
 .PHONY: clean run

@@ -8,7 +8,7 @@
 
 void print_usage()
 {
-    printf("Uso: make run INPUT=<nome do arquivo com extensão na pasta 'inputs'>\n");
+    printf("Uso: make run INPUT=<nome do arquivo com extensão>\n");
 }
 
 int main(int argc, char *argv[])

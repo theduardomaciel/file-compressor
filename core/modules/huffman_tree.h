@@ -1,4 +1,6 @@
 #include <stdint.h>
+
+#include "stack.h"
 #include "priority_queue.h"
 
 #define MAX_SIZE 256
@@ -17,9 +19,17 @@ typedef struct huffman_node
 
 huffman_node *ht_init();
 
-priority_queue *build_priority_queue(uint64_t *frequency_table);
-
 huffman_node *ht_create_node(void *data, uint64_t frequency, huffman_node *left, huffman_node *right);
+
+int ht_get_tree_size(huffman_node *root);
+
+void ht_pre_order(huffman_node *root, void (*callback)(void *data, void *arg), void *arg);
+
+priority_queue *build_frequency_queue(uint64_t *frequency_table);
+
+int is_leaf(huffman_node *node);
+
+void build_bytes_dictionary(huffman_node *root, stack *bytes_dictionary[MAX_SIZE], stack *path);
 
 huffman_node *build_huffman_tree(priority_queue *queue);
 
@@ -33,5 +43,7 @@ void pq_print(priority_queue *pq);
 void print_tree_visually(huffman_node *node, int level, char direction);
 
 void print_pre_order(huffman_node *root);
+
+void print_dictionary(stack *bytes_dictionary[MAX_SIZE]);
 
 #endif // HUFFMAN_TREE_H

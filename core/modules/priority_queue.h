@@ -3,25 +3,6 @@
 
 // Baseado no código de: https://github.com/nomemory/c-generic-pqueue ❤️
 
-/**
- * Macro de depuração.
- *
- * Verifica se há um ponteiro NULL e imprime a mensagem de erro, o arquivo de origem e
- * linha via 'stderr' .
- * Se a verificação falhar, o programa será encerrado com o código de erro (-1).
- */
-#define NULL_POINTER_CHECK(ptr)                          \
-    {                                                    \
-        if (NULL == (ptr))                               \
-        {                                                \
-            fprintf(stderr, "%s:%d PONTEIRO NULO: %s n", \
-                    __FILE__, __LINE__, #ptr);           \
-            exit(-1);                                    \
-        }                                                \
-    }
-
-#define DEBUG(msg) fprintf(stderr, "%s:%d %s", __FILE__, __LINE__, (msg))
-
 // Estrutura para a fila de prioridade
 typedef struct
 {

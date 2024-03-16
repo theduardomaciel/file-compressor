@@ -2,6 +2,29 @@
 #define UTILS_H
 
 /**
+ * Macro de depuração.
+ *
+ * Verifica se há um ponteiro NULL e imprime a mensagem de erro, o arquivo de origem e
+ * linha via 'stderr' .
+ * Se a verificação falhar, o programa será encerrado com o código de erro (-1).
+ */
+#define NULL_POINTER_CHECK(ptr)                          \
+    {                                                    \
+        if (NULL == (ptr))                               \
+        {                                                \
+            fprintf(stderr, "%s:%d PONTEIRO NULO: %s n", \
+                    __FILE__, __LINE__, #ptr);           \
+            exit(-1);                                    \
+        }                                                \
+    }
+
+/** Macro de depuração.
+ *
+ * Imprime uma mensagem de depuração, o arquivo de origem e a linha via 'stderr'.
+ */
+#define DEBUG(msg) fprintf(stderr, "%s:%d %s", __FILE__, __LINE__, (msg))
+
+/**
  * @brief Concatena duas strings.
  *
  * Esta função concatena duas strings, retornando uma nova string que contém a concatenação das duas.

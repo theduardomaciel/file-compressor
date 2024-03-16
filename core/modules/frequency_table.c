@@ -22,7 +22,7 @@ uint64_t *build_frequency_table(FILE *input)
     // Percorremos o arquivo byte a byte e incrementamos a frequência do byte atual
     // A função fread retorna a quantidade de elementos lidos com sucesso
     // Como nosso terceiro argumento (nmemb) é 1, a função retorna 1 se um byte foi lido com sucesso e 0 se não houver mais bytes para ler
-    while (fread(&current_byte, sizeof(uint8_t), 1, input) > 0)
+    while (fread(&current_byte, sizeof(uint8_t), 1, input) == 1)
     {
         // printf("Byte lido: %d (freq. atual: %ld)\n", current_byte, frequency_table[current_byte]);
         frequency_table[current_byte]++;

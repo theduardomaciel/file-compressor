@@ -11,6 +11,7 @@
         "stdlib.h": "c",
         "frequency_table.h": "c",
         "priority_queue.h": "c",
-        "huffman_tree.h": "c"
+        "huffman_tree.h": "c",
+        "utils.h": "c"
     }
 }
