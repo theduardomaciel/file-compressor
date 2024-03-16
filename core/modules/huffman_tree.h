@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <stdint.h>
 
 #include "stack.h"
@@ -28,6 +31,8 @@ void ht_pre_order(huffman_node *root, void (*callback)(void *data, void *arg), v
 priority_queue *build_frequency_queue(uint64_t *frequency_table);
 
 int is_leaf(huffman_node *node);
+
+int is_scaped_char(huffman_node *node);
 
 void build_bytes_dictionary(huffman_node *root, stack *bytes_dictionary[MAX_SIZE], stack *path);
 

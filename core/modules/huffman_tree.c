@@ -1,10 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdint.h>
-
 #include "utils.h"
-
 #include "huffman_tree.h"
 #include "priority_queue.h"
 
@@ -16,6 +10,8 @@
 huffman_node *ht_init()
 {
     huffman_node *tree = malloc(sizeof(huffman_node));
+    tree->left = NULL;
+    tree->right = NULL;
     return tree;
 }
 
@@ -54,7 +50,7 @@ int ht_get_tree_size(huffman_node *root)
 
     if (is_leaf(root) && is_scaped_char(root))
     {
-        size++; // E incrementamos o tamanho para este nó caso ele seja uma folha que precise de um caractere de escape (\)
+        size++; // E incrementamos o tamanho para este nó caso ele seja uma folha (precisa de um caractere de escape \ pra ser identificado corretamente)
     }
 
     // Em seguida, calculamos o tamanho dos subárvores esquerda e direita recursivamente
@@ -68,10 +64,10 @@ void ht_pre_order(huffman_node *root, void (*callback)(void *data, void *arg), v
 {
     if (root != NULL)
     {
-        // Se o nó atual precisar de um caractere de escape, chamamos o callback com o caractere de escape
+        // Se o nó atual não for um nó interno, mas sim uma folha, precisamos 'escapar' o caractere
         if (is_leaf(root) && is_scaped_char(root))
         {
-            callback('\\', arg);
+            callback((uint8_t *)'\\', arg);
         }
 
         // Caso não, podemos chamar o callback com o caractere normal
@@ -187,26 +183,21 @@ void build_bytes_dictionary(huffman_node *root, stack *bytes_dictionary[MAX_SIZE
         {
             // Se não tivermos chegado a uma folha, precisamos continuar a percorrer a árvore
 
-            // Primeiro, empurramos um novo bit para o caminho atual
-            // Como estamos indo para a esquerda, empurramos 0
+            // Primeiro, empurramos um novo bit para o byte atual. Se estiver percorrendo a esquerda, empurramos 0, caso contrário, 1
+            // Em seguida, chamamos a função recursivamente para o ramo da árvore, o que repete o processo até encontrar uma folha
+            // Depois de explorar o ramo completamente, desempilhamos o bit adicionado
+            // Isso nos permite voltar um nível na árvore e explorar o outro ramo
+
             stack_push(current_path, malloc(sizeof(uint8_t)));
             *(uint8_t *)current_path->top->data = 0;
 
-            // Em seguida, chamamos a função recursivamente para o ramo esquerdo da árvore
-            // Isso repete todo o processo até que cheguemos a uma folha
             build_bytes_dictionary(root->left, bytes_dictionary, current_path);
-
-            // Depois de explorar o ramo esquerdo completamente, desempilhamos o bit adicionado
-            // Isso nos permite voltar um nível na árvore e explorar o ramo direito
             stack_pop(current_path);
 
-            // Repetimos o mesmo procedimento para o ramo direito, empurrando um novo bit na pilha do caminho (path)
-            // Desta vez, atribuímos 1 para indicar que estamos indo para a direita.
             stack_push(current_path, malloc(sizeof(uint8_t)));
             *(uint8_t *)current_path->top->data = 1;
 
             build_bytes_dictionary(root->right, bytes_dictionary, current_path);
-
             stack_pop(current_path);
         }
     }

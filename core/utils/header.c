@@ -55,3 +55,24 @@ void header_write(FILE *file, header_data *data)
 
     free(data);
 }
+
+header_data *header_read(FILE *file)
+{
+    // 1. Lemos os 2 primeiros bytes do arquivo
+    uint8_t first_byte;
+    uint8_t second_byte;
+
+    fread(&first_byte, sizeof(uint8_t), 1, file);
+    fread(&second_byte, sizeof(uint8_t), 1, file);
+
+    // 2. Extraímos o tamanho do lixo e o tamanho da árvore de Huffman
+    header_data *data = malloc(sizeof(header_data));
+
+    data->trash_size = first_byte >> 5;
+    data->tree_size = (first_byte & 0x1F) << 8 | second_byte;
+
+    data->tree = malloc(data->tree_size);
+    fread(data->tree, sizeof(uint8_t), data->tree_size, file);
+
+    return data;
+}

@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${fileDirname}/${fileBasenameNoExtension}",
-            "args": ["teste.txt"],
+            "args": ["teste.txt.huff"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

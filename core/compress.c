@@ -13,6 +13,10 @@
 #include "priority_queue.h"
 #include "huffman_tree.h"
 
+void DEBUG_tree(huffman_node *tree);
+
+void DEBUG_dictionary(stack *dictionary[MAX_SIZE]);
+
 void compress(FILE *input, char *output_path)
 {
     // Construímos a tabela de frequências com base no arquivo de entrada
@@ -23,15 +27,14 @@ void compress(FILE *input, char *output_path)
 
     // Construímos a árvore de Huffman com base na fila de prioridade
     huffman_node *tree = build_huffman_tree(frequency_queue);
-    // print_pre_order(tree);
-    // print_tree_visually(tree, 0, '-');
+    // DEBUG_tree(tree);
 
     // Construímos o dicionário que armazena os bytes comprimidos em seus respectivos bytes originais
     stack *bytes_dictionary[MAX_SIZE];
 
     stack *current_path = stack_init();
     build_bytes_dictionary(tree, bytes_dictionary, current_path);
-    // print_dictionary(bytes_dictionary);
+    // DEBUG_dictionary(bytes_dictionary);
 
     // Criamos o arquivo de saída agora, a fim de evitar o gasto de recursos caso nos deparemos com algum erro durante a compressão
     FILE *output_file = open_file(output_path, "wb");
@@ -97,6 +100,17 @@ void compress(FILE *input, char *output_path)
     header_write(output_file, header);
 
     close_file(output_file);
+}
+
+void DEBUG_tree(huffman_node *tree)
+{
+    print_pre_order(tree);
+    print_tree_visually(tree, 0, '-');
+}
+
+void DEBUG_dictionary(stack *dictionary[MAX_SIZE])
+{
+    print_dictionary(dictionary);
 }
 
 /*
