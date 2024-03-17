@@ -46,15 +46,17 @@ int main(int argc, char *argv[])
 
     if (strcmp(extension, ".huff") == 0)
     {
-        char *output_path = concat_strings("./inputs/", input_filename);
+        char *output_path = concat_strings("./outputs/", input_filename);
         printf("🫸   🫷 Descomprimindo arquivo `%s` para `%s`...\n\n", concat_strings(input_filename, extension), output_path);
         decompress(input_file, output_path);
+        printf("✅ Arquivo descomprimido com sucesso!\n");
     }
     else
     {
         char *output_path = concat_strings(concat_strings("./inputs/", argv[1]), ".huff");
         printf("🤏 Comprimindo arquivo `%s` para `%s`...\n\n", concat_strings(input_filename, extension), output_path);
         compress(input_file, output_path);
+        printf("✅ Arquivo comprimido com sucesso!\n");
     }
 
     close_file(input_file); // O arquivo de output é fechado dentro das funções de compressão e descompressão

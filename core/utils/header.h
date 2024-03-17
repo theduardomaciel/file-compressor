@@ -9,6 +9,7 @@ typedef struct header_data
 {
     uint16_t trash_size;
     uint16_t tree_size;
+    uint64_t file_size;
     uint8_t *tree;
 } header_data;
 

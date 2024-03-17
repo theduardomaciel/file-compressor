@@ -74,5 +74,15 @@ header_data *header_read(FILE *file)
     data->tree = malloc(data->tree_size);
     fread(data->tree, sizeof(uint8_t), data->tree_size, file);
 
+    // 3. Obtemos o tamanho do arquivo compactado
+    // Para isso, movemos o cursor para o final do arquivo
+    fseek(file, 0, SEEK_END);
+
+    // E obtemos a posição atual do cursor, que é o tamanho do arquivo em bytes
+    data->file_size = ftell(file);
+
+    // 4. Movemos o cursor de leitura para a posição correta (após o cabeçalho e a árvore de Huffman)
+    fseek(file, sizeof(uint16_t) + data->tree_size, SEEK_SET);
+
     return data;
 }

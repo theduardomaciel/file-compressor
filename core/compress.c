@@ -27,7 +27,8 @@ void compress(FILE *input, char *output_path)
 
     // Construímos a árvore de Huffman com base na fila de prioridade
     huffman_node *tree = build_huffman_tree(frequency_queue);
-    // DEBUG_tree(tree);
+    // print_pre_order(tree);
+    //  DEBUG_tree(tree);
 
     // Construímos o dicionário que armazena os bytes comprimidos em seus respectivos bytes originais
     stack *bytes_dictionary[MAX_SIZE];
@@ -95,6 +96,7 @@ void compress(FILE *input, char *output_path)
 
     printf("\nTamanho da árvore: %d\n", header->tree_size);
     printf("Tamanho do lixo: %d\n", *(uint16_t *)&header->trash_size >> 13);
+    printf("Posição do bite atual: %d\n", current_byte_index);
 
     // Preenchemos os espaços reservados no cabeçalho para o tamanho do lixo e da árvore de Huffman
     header_write(output_file, header);

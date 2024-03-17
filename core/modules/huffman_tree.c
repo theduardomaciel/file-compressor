@@ -67,11 +67,13 @@ void ht_pre_order(huffman_node *root, void (*callback)(void *data, void *arg), v
         // Se o nó atual não for um nó interno, mas sim uma folha, precisamos 'escapar' o caractere
         if (is_leaf(root) && is_scaped_char(root))
         {
-            callback((uint8_t *)'\\', arg);
+            // É necessário declarar uma variável pois não podemos passar o valor diretamente para a função
+            char escape = '\\';
+            callback(&escape, arg);
         }
 
         // Caso não, podemos chamar o callback com o caractere normal
-        callback((uint8_t *)root->data, arg);
+        callback(root->data, arg);
 
         // Em por fim, chamamos a função recursivamente para os ramos esquerdo e direito da árvore
         ht_pre_order(root->left, callback, arg);
@@ -103,27 +105,32 @@ priority_queue *build_frequency_queue(uint64_t *frequency_table)
     priority_queue *queue = init_priority_queue(MAX_SIZE, compare);
 
     // Adiciona todos os bytes que aparecem no arquivo (têm frequência maior que 0) na fila de prioridade
-    for (uint64_t i = 0; i < MAX_SIZE; i++)
+    for (uint16_t i = 0; i < MAX_SIZE; i++)
     {
-        uint64_t current_frequency = frequency_table[i];
+        uint16_t current_frequency = frequency_table[i];
 
         if (current_frequency > 0)
         {
             uint8_t *data = malloc(sizeof(uint8_t));
+            NULL_POINTER_CHECK(data);
+
             *data = i;
 
-            printf("Enfileirando %c com prioridade %lu\n", *data, current_frequency);
+            // printf("Enfileirando %d (%d)\n", i, current_frequency);
             pq_enqueue(queue, ht_create_node(data, current_frequency, NULL, NULL));
         }
     }
 
-    pq_print(queue);
+    // pq_print(queue);
 
     return queue;
 }
 
 huffman_node *build_huffman_tree(priority_queue *queue)
 {
+    NULL_POINTER_CHECK(queue);
+
+    // Quando alcançarmos o último elemento, estamos tratando da raiz da árvore
     if (queue->size == 1)
     {
         huffman_node *node = (huffman_node *)pq_dequeue(queue);
@@ -154,12 +161,12 @@ huffman_node *build_huffman_tree(priority_queue *queue)
             uint64_t summed_frequencies = left->frequency + right->frequency;
             // printf("Frequências somadas (%ld + %ld): %ld\n", left->frequency, right->frequency, summed_frequencies);
 
-            printf("🖇️  Unindo os dois nós com menores frequências:\n");
+            /* printf("🖇️  Unindo os dois nós com menores frequências:\n");
             printf("\t\tNó pai: %c (%ld)\n", *(uint8_t *)parent_data, summed_frequencies);
             printf("\t\t/\t\\\n");
             printf("Nó esquerdo: %c (%ld)\t", *(uint8_t *)left->data, left->frequency);
             printf("Nó direito: %c (%ld)\n", *(uint8_t *)right->data, right->frequency);
-            printf("--------------------\n");
+            printf("--------------------\n"); */
 
             pq_enqueue(queue, ht_create_node(parent_data, summed_frequencies, left, right));
         }
@@ -241,7 +248,8 @@ void print_pre_order(huffman_node *root)
 {
     if (root != NULL)
     {
-        printf("%c (%ld)\n", *(uint8_t *)(char *)root->data, root->frequency);
+        printf("%d (%ld)\n", *(uint8_t *)root->data, root->frequency);
+
         print_pre_order(root->left);
         print_pre_order(root->right);
     }

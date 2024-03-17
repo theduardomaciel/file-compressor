@@ -78,8 +78,6 @@ void pq_destroy(priority_queue *pq)
 
 void pq_enqueue(priority_queue *pq, const void *data)
 {
-    NULL_POINTER_CHECK(pq);
-
     if (pq == NULL)
     {
         DEBUG("A fila de prioridade não foi inicializada.\n");
@@ -93,7 +91,6 @@ void pq_enqueue(priority_queue *pq, const void *data)
     }
 
     size_t index;
-    // void *temp = NULL;
 
     // Adicionamos o elemento no final da fila de prioridade
     pq->data[pq->size] = (void *)data;
@@ -147,7 +144,6 @@ void pq_heapify(priority_queue *pq, size_t index)
     }
 
     size_t largest;
-    // void *temp = NULL;
 
     // Calculamos os índices dos filhos esquerdo e direito
     size_t left = LEFT(index);
