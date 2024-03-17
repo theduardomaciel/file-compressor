@@ -1,5 +1,10 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <stdint.h>
+
+#include "huffman_tree.h"
+#include "priority_queue.h"
 
 #ifndef FREQUENCY_TABLE_H
 #define FREQUENCY_TABLE_H
@@ -16,5 +21,7 @@
  * @return Um ponteiro para a tabela de frequência construída.
  */
 uint64_t *build_frequency_table(FILE *input);
+
+priority_queue *build_priority_queue(uint64_t *frequency_table);
 
 #endif // FREQUENCY_TABLE_H

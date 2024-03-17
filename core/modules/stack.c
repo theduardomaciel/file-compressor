@@ -13,41 +13,41 @@
 // Função para inicializar a pilha
 stack *stack_init()
 {
-    stack *new_list = malloc(sizeof(stack));
-    NULL_POINTER_CHECK(new_list);
+    stack *new_stack = malloc(sizeof(stack));
+    NULL_POINTER_CHECK(new_stack);
 
-    new_list->top = NULL;
-    new_list->size = 0;
+    new_stack->top = NULL;
+    new_stack->size = 0;
 
-    return (new_list);
+    return (new_stack);
 }
 
 // Função para adicionar um elemento no início da pilha
-void stack_push(stack *list, void *data)
+void stack_push(stack *stack, void *data)
 {
     stack_node *new_node = malloc(sizeof(stack_node));
     NULL_POINTER_CHECK(new_node);
 
     new_node->data = data;
-    new_node->next = list->top;
+    new_node->next = stack->top;
 
-    list->top = new_node;
-    list->size++;
+    stack->top = new_node;
+    stack->size++;
 }
 
 // Função para remover um elemento do início da pilha
-void *stack_pop(stack *list)
+void *stack_pop(stack *stack)
 {
-    if (list->top == NULL)
+    if (stack->top == NULL)
     {
         return NULL;
     }
 
-    stack_node *node = list->top;
+    stack_node *node = stack->top;
     void *data = node->data;
 
-    list->top = node->next;
-    list->size--;
+    stack->top = node->next;
+    stack->size--;
 
     free(node);
 
@@ -55,24 +55,24 @@ void *stack_pop(stack *list)
 }
 
 // Função para copiar a pilha
-stack *stack_copy(stack *list)
+stack *stack_copy(stack *stack)
 {
-    stack *new_list = stack_init();
-    stack_node *current = list->top;
+    stack_node *new_stack = stack_init();
+    stack_node *current = stack->top;
 
     while (current != NULL)
     {
-        stack_push(new_list, current->data);
+        stack_push(new_stack, current->data);
         current = current->next;
     }
 
-    return new_list;
+    return new_stack;
 }
 
 // Função para destruir a pilha
-void stack_destroy(stack *list)
+void stack_destroy(stack *stack)
 {
-    stack_node *current = list->top;
+    stack_node *current = stack->top;
     stack_node *next;
 
     while (current != NULL)
@@ -82,5 +82,5 @@ void stack_destroy(stack *list)
         current = next;
     }
 
-    free(list);
+    free(stack);
 }

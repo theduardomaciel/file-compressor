@@ -7,8 +7,8 @@
 
 #include "utils.h"
 #include "file_io.h"
-
 #include "header.h"
+
 #include "frequency_table.h"
 #include "priority_queue.h"
 #include "huffman_tree.h"
@@ -31,11 +31,13 @@ void compress(FILE *input, char *output_path)
     //  DEBUG_tree(tree);
 
     // Construímos o dicionário que armazena os bytes comprimidos em seus respectivos bytes originais
-    stack *bytes_dictionary[MAX_SIZE];
-
     stack *current_path = stack_init();
+    stack **bytes_dictionary = malloc(MAX_SIZE * sizeof(stack *));
+    memset(bytes_dictionary, 0, MAX_SIZE * sizeof(stack *));
+
     build_bytes_dictionary(tree, bytes_dictionary, current_path);
     // DEBUG_dictionary(bytes_dictionary);
+    free(current_path);
 
     // Criamos o arquivo de saída agora, a fim de evitar o gasto de recursos caso nos deparemos com algum erro durante a compressão
     FILE *output_file = open_file(output_path, "wb");
@@ -112,6 +114,7 @@ void DEBUG_tree(huffman_node *tree)
 
 void DEBUG_dictionary(stack *dictionary[MAX_SIZE])
 {
+    printf("Dicionário de bytes:\n");
     print_dictionary(dictionary);
 }
 

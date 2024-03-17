@@ -3,11 +3,9 @@
 #include <string.h>
 #include <stdint.h>
 
+#include "utils.h"
 #include "stack.h"
 #include "priority_queue.h"
-
-#define MAX_SIZE 256
-// Para mais informações do porquê podemos usar o número 256, veja o arquivo docs/bytes.md
 
 #ifndef HUFFMAN_TREE_H
 #define HUFFMAN_TREE_H
@@ -34,7 +32,7 @@ int is_leaf(huffman_node *node);
 
 int is_scaped_char(huffman_node *node);
 
-void build_bytes_dictionary(huffman_node *root, stack *bytes_dictionary[MAX_SIZE], stack *path);
+void build_bytes_dictionary(huffman_node *root, stack **bytes_dictionary, stack *path);
 
 huffman_node *build_huffman_tree(priority_queue *queue);
 

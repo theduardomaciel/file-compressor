@@ -1,6 +1,6 @@
-#include "utils.h"
-#include "huffman_tree.h"
 #include "priority_queue.h"
+#include "huffman_tree.h"
+#include "utils.h"
 
 /*
     ⮕ Funções públicas
@@ -62,122 +62,79 @@ int ht_get_tree_size(huffman_node *root)
 
 void ht_pre_order(huffman_node *root, void (*callback)(void *data, void *arg), void *arg)
 {
-    if (root != NULL)
+    stack *stack = stack_init();
+    stack_push(stack, root);
+
+    while (stack->size != 0)
     {
+        huffman_node *current_node = (huffman_node *)stack_pop(stack);
+
         // Se o nó atual não for um nó interno, mas sim uma folha, precisamos 'escapar' o caractere
-        if (is_leaf(root) && is_scaped_char(root))
+        // Fazemos isso para que seja possível distingui-lo de um nó interno comum
+        if (is_leaf(current_node) && is_scaped_char(current_node))
         {
-            // É necessário declarar uma variável pois não podemos passar o valor diretamente para a função
-            char escape = '\\';
-            callback(&escape, arg);
+            // Realizamos a chamada da função de callback com um ponteiro para o caractere '\'
+            // pois a função callback espera um ponteiro genérico (void *) como argumento.
+            // Dessa forma, o operador '&' é usado para obter o endereço de memória onde o caractere
+            // está armazenado, permitindo que seja passado corretamente para a função callback.
+            callback(&(char){'\\'}, arg);
         }
 
         // Caso não, podemos chamar o callback com o caractere normal
-        callback(root->data, arg);
+        callback(current_node->data, arg);
 
-        // Em por fim, chamamos a função recursivamente para os ramos esquerdo e direito da árvore
-        ht_pre_order(root->left, callback, arg);
-        ht_pre_order(root->right, callback, arg);
-    }
-}
-
-int compare(const void *d1, const void *d2)
-{
-    huffman_node *n1 = (huffman_node *)d1;
-    huffman_node *n2 = (huffman_node *)d2;
-
-    if (n1->frequency == n2->frequency)
-    {
-        return 1; // não pode ser 0 pois causa ambiguidade
-    }
-    else if (n1->frequency > n2->frequency) // cuidado com esse sinal! não inverta!
-    {
-        return -1;
-    }
-    else
-    {
-        return 1;
-    }
-}
-
-priority_queue *build_frequency_queue(uint64_t *frequency_table)
-{
-    priority_queue *queue = init_priority_queue(MAX_SIZE, compare);
-
-    // Adiciona todos os bytes que aparecem no arquivo (têm frequência maior que 0) na fila de prioridade
-    for (uint16_t i = 0; i < MAX_SIZE; i++)
-    {
-        uint16_t current_frequency = frequency_table[i];
-
-        if (current_frequency > 0)
+        // Empilhar os ramos direito e esquerdo, se existirem
+        if (current_node->right != NULL)
         {
-            uint8_t *data = malloc(sizeof(uint8_t));
-            NULL_POINTER_CHECK(data);
-
-            *data = i;
-
-            // printf("Enfileirando %d (%d)\n", i, current_frequency);
-            pq_enqueue(queue, ht_create_node(data, current_frequency, NULL, NULL));
+            stack_push(stack, current_node->right);
+        }
+        if (current_node->left != NULL)
+        {
+            stack_push(stack, current_node->left);
         }
     }
 
-    // pq_print(queue);
-
-    return queue;
+    // Liberar a memória usada pela pilha
+    stack_destroy(stack);
 }
 
 huffman_node *build_huffman_tree(priority_queue *queue)
 {
     NULL_POINTER_CHECK(queue);
 
-    // Quando alcançarmos o último elemento, estamos tratando da raiz da árvore
-    if (queue->size == 1)
+    // Garantimos que ainda existem nós na fila
+    while (queue->size > 1)
     {
-        huffman_node *node = (huffman_node *)pq_dequeue(queue);
-        huffman_node *root = malloc(sizeof(huffman_node));
+        // printf("Tamanho da fila: %lu\n", queue->size);
 
-        root->data = malloc(sizeof(uint8_t));
-        *(uint8_t *)root->data = '*';
+        // Desempilhamos os dois nós com menores frequências
+        huffman_node *left = (huffman_node *)pq_dequeue(queue);
+        huffman_node *right = (huffman_node *)pq_dequeue(queue);
 
-        root->frequency = node->frequency;
-        root->left = NULL;
-        root->right = node;
+        // Seguindo as especificações do projeto, o nó pai terá um caractere nulo (asterisco)
+        // Por estarmos utilizando um ponteiro para void, precisamos alocar memória para o caractere
+        void *parent_data = malloc(sizeof(uint8_t));
+        *(uint8_t *)parent_data = '*';
 
-        return root;
+        uint64_t summed_frequencies = left->frequency + right->frequency;
+        // Criamos um novo nó com os dois nós desempilhados como filhos
+
+        // printf("Frequências somadas (%ld + %ld): %ld\n", left->frequency, right->frequency, summed_frequencies);
+        /* printf("🖇️  Unindo os dois nós com menores frequências:\n");
+        printf("\t\tNó pai: %c (%ld)\n", *(uint8_t *)parent_data, summed_frequencies);
+        printf("\t\t/\t\\\n");
+        printf("Nó esquerdo: %c (%ld)\t", *(uint8_t *)left->data, left->frequency);
+        printf("Nó direito: %c (%ld)\n", *(uint8_t *)right->data, right->frequency);
+        printf("--------------------\n"); */
+
+        pq_enqueue(queue, ht_create_node(parent_data, summed_frequencies, left, right));
     }
-    else
-    {
-        while (queue->size > 1)
-        {
-            // printf("Tamanho da fila: %lu\n", queue->size);
 
-            huffman_node *left = (huffman_node *)pq_dequeue(queue);
-            huffman_node *right = (huffman_node *)pq_dequeue(queue);
-
-            // Seguindo as especificações do projeto, o nó pai terá um caractere nulo (asterisco)
-            void *parent_data = malloc(sizeof(uint8_t));
-            *(uint8_t *)parent_data = '*';
-
-            uint64_t summed_frequencies = left->frequency + right->frequency;
-            // printf("Frequências somadas (%ld + %ld): %ld\n", left->frequency, right->frequency, summed_frequencies);
-
-            /* printf("🖇️  Unindo os dois nós com menores frequências:\n");
-            printf("\t\tNó pai: %c (%ld)\n", *(uint8_t *)parent_data, summed_frequencies);
-            printf("\t\t/\t\\\n");
-            printf("Nó esquerdo: %c (%ld)\t", *(uint8_t *)left->data, left->frequency);
-            printf("Nó direito: %c (%ld)\n", *(uint8_t *)right->data, right->frequency);
-            printf("--------------------\n"); */
-
-            pq_enqueue(queue, ht_create_node(parent_data, summed_frequencies, left, right));
-        }
-
-        return (huffman_node *)pq_dequeue(queue);
-    }
+    return (huffman_node *)pq_dequeue(queue);
 }
 
-void build_bytes_dictionary(huffman_node *root, stack *bytes_dictionary[MAX_SIZE], stack *current_path)
+void build_bytes_dictionary(huffman_node *root, stack **bytes_dictionary, stack *current_path)
 {
-    // Condição de parada: quando não houverem nós para explorar
     if (root != NULL)
     {
         // Se tivermos chegado a uma folha, copiamos o caminho até ela para o dicionário

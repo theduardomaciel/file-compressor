@@ -1,6 +1,9 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#define MAX_SIZE 256
+// Para mais informações do porquê podemos usar o número 256, veja o arquivo docs/bytes.md
+
 /**
  * Macro de depuração.
  *
