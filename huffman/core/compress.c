@@ -1,13 +1,8 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdint.h>
+#include "main.h"
 
-#include "compression.h"
-
-#include "utils.h"
 #include "file_io.h"
 #include "header.h"
+#include "utils.h"
 
 #include "frequency_table.h"
 #include "priority_queue.h"
@@ -36,8 +31,8 @@ void compress(FILE *input, char *output_path)
     memset(bytes_dictionary, 0, MAX_SIZE * sizeof(stack *));
 
     build_bytes_dictionary(tree, bytes_dictionary, current_path);
-    // DEBUG_dictionary(bytes_dictionary);
     free(current_path);
+    // DEBUG_dictionary(bytes_dictionary);
 
     // Criamos o arquivo de saída agora, a fim de evitar o gasto de recursos caso nos deparemos com algum erro durante a compressão
     FILE *output_file = open_file(output_path, "wb");
@@ -96,9 +91,9 @@ void compress(FILE *input, char *output_path)
     header->tree_size = ht_get_tree_size(tree);
     header->trash_size = (current_byte_index + 1) << 13;
 
-    printf("\nTamanho da árvore: %d\n", header->tree_size);
-    printf("Tamanho do lixo: %d\n", *(uint16_t *)&header->trash_size >> 13);
-    printf("Posição do bite atual: %d\n", current_byte_index);
+    printf("🌳 Tamanho da árvore: %d\n", header->tree_size);
+    printf("🗑️  Tamanho do lixo: %d\n", *(uint16_t *)&header->trash_size >> 13);
+    // printf("Posição do bite atual: %d\n", current_byte_index);
 
     // Preenchemos os espaços reservados no cabeçalho para o tamanho do lixo e da árvore de Huffman
     header_write(output_file, header);

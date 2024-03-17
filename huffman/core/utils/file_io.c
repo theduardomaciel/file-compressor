@@ -1,9 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "utils.h"
 #include "file_io.h"
+#include "utils.h"
 
 // Operações de leitura de arquivos
 
@@ -52,4 +48,11 @@ char *extract_extension(const char *filename)
     }
 
     return NULL;
+}
+
+void create_directory(const char *path)
+{
+    char *command = concat_strings("mkdir -p ", path);
+    system(command);
+    free(command);
 }

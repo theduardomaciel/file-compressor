@@ -1,0 +1,12 @@
+{
+    "cSpell.words": [
+        "heapify",
+        "huffman"
+    ],
+    "files.associations": {
+        ".env.*": "dotenv",
+        "*.css": "css",
+        ".env.example": "properties",
+        "huffman_tree.h": "c"
+    }
+}

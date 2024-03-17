@@ -90,8 +90,9 @@ make test
 
 ## 🚧 Roadmap
 
-- [x] Desenvolver os módulos de `heap` e `árvore de huffman` para utilização nos processos de compressão e descompressão
-- [x] Implementar o algoritmo básico para compressão
+- [x] Desenvolver os módulos de `stack`, `priority_queue` e `huffman_tree` para utilização nos processos de compressão e descompressão
+- [x] Implementar o algoritmo de compressão
+- [x] Implementar o algoritmo de descompressão
 - [ ] Criar casos de testes unitários para as estruturas de dados usadas
 
 <br />
@@ -117,5 +118,3 @@ make test
 #### Testes unitários
 
 - [Framework de testes para C](https://cmocka.org/)
-
-<br />

@@ -167,6 +167,52 @@ void build_bytes_dictionary(huffman_node *root, stack **bytes_dictionary, stack 
     }
 }
 
+// Nós internos sempre serão representados por um *, no entanto, para diferenciá-lo de uma folha, precisamos 'escapar' o caractere
+// Para isso, utilizamos o caractere '\' antes do '*', indicando que o próximo caractere representa uma folha
+huffman_node *rebuild_huffman_tree(uint8_t **header_tree)
+{
+    // Alocamos espaço para armazenar o símbolo atual da árvore
+    uint8_t *item = malloc(sizeof(uint8_t));
+    uint8_t *current_symbol = *header_tree; // Obtém o símbolo atual da árvore
+
+    // Obs.: Ao utilizar (*header_tree)++ estamos avançando para o próximo símbolo
+
+    // Se o símbolo atual for '*', indica um nó interno
+    if (*current_symbol == '*')
+    {
+        *item = '*';
+        (*header_tree)++;
+
+        // Reconstruímos as subárvores esquerda e direita recursivamente
+        huffman_node *left = rebuild_huffman_tree(header_tree);
+        huffman_node *right = rebuild_huffman_tree(header_tree);
+
+        // Criamos um nó com as subárvores esquerda e direita
+        return ht_create_node((void *)item, 0, left, right);
+    }
+    else
+    {
+        // Se o símbolo atual for '\', indica que o próximo símbolo é um caractere especial,
+        // portanto, avançamos para o próximo símbolo e o armazenamos em item
+        if (*current_symbol == '\\')
+        {
+            (*header_tree)++;
+            *item = **header_tree;
+            (*header_tree)++;
+        }
+        else
+        {
+            // Caso contrário, o símbolo atual é um caractere normal, então o armazenamos em item e avançamos para o próximo símbolo
+            *item = *current_symbol;
+            (*header_tree)++;
+        }
+
+        // Criamos e retornamos um nó da árvore de Huffman com o símbolo atual
+        huffman_node *node = ht_create_node((void *)item, 0, NULL, NULL);
+        return node;
+    }
+}
+
 // ⮕ Funções de impressão
 
 void pq_print(priority_queue *pq)
