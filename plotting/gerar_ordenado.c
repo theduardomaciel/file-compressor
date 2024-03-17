@@ -15,20 +15,20 @@ struct arvore{
 };
 
 struct node *create_node(int valor){
-    struct node* newnode = (struct node*) malloc(sizeof(struct node));
+    struct node *newnode = (struct node*) malloc(sizeof(struct node));
     newnode->valor = valor;
     newnode->next = NULL;
-
+    
     return newnode;
 }
 
 
 struct arvore *create_arvore(int valor){
-    struct arvore* newarvore = (struct arvore*) malloc(sizeof(struct arvore));
+    struct arvore *newarvore = (struct arvore*) malloc(sizeof(struct arvore));
     newarvore->valor = valor;
     newarvore->left = NULL;
     newarvore->right = NULL;
-
+    
     return newarvore;
 }
 
@@ -42,7 +42,7 @@ struct arvore *inserirArvore(struct arvore *arvore,int valor){
         arvore->right = inserirArvore(arvore->right, valor);
     }
     return arvore;
-
+    
 }
 
 struct node *inserirLista(struct node *node,int valor){
@@ -52,16 +52,16 @@ struct node *inserirLista(struct node *node,int valor){
         struct node *newnode = create_node(valor);
         newnode->next = node;
         node = newnode;
-
+        
     }
     return node;
-
+    
 }
 
-int giveRandom(int min, int max) {
-    int num = (rand() % (max - min + 1)) + min;
+int giveRandom(int min, int max) { 
+    int num = (rand() % (max - min + 1)) + min; 
     return num;
-}
+} 
 
 int jaFoi(int array[],int random_num, int index_array_randoms){
     int i=0;
@@ -123,7 +123,7 @@ int buscaLista(struct node *node,int valor){
 
 int buscaArvore(struct arvore *arvore,int valor,int *comp_arvore){
     if(arvore==NULL){
-        return;
+        return -1;
     }else{
         (*comp_arvore)++;
         if(arvore->valor == valor){
@@ -134,9 +134,9 @@ int buscaArvore(struct arvore *arvore,int valor,int *comp_arvore){
             }else if(arvore->valor < valor){
                 return buscaArvore(arvore->right,valor,comp_arvore);
             }
-
+            
         }
-
+        
     }
 }
 
@@ -148,7 +148,7 @@ void printMatriz(int matriz[][3],int index_matriz_search){
     }
 }
 
-void colocar(char matrizz[][30], int matriz[][3],int index_matriz_search, int *index_matriz_colocar){
+void colocar(char matrizz[][20], int matriz[][3],int index_matriz_search, int *index_matriz_colocar){
     int i=0;
     while(i<index_matriz_search){
         sprintf(matrizz[i],"%d %d %d",matriz[i][0],matriz[i][1],matriz[i][2]);
@@ -157,7 +157,7 @@ void colocar(char matrizz[][30], int matriz[][3],int index_matriz_search, int *i
     }
 }
 
-void printMatrizColocar(char matrizz[][30],int index_matriz_colocar){
+void printMatrizColocar(char matrizz[][20],int index_matriz_colocar){
     int i=0;
     while(i<index_matriz_colocar){
         printf("%s\n",matrizz[i]);
@@ -171,10 +171,8 @@ struct arvore* construirArvore(int array[], int inicio, int fim) {
 
     int meio = (inicio + fim) / 2;
 
-    // Cria um nÛ para o valor do meio do array
     struct arvore* arvore = create_arvore(array[meio]);
 
-    // ConstrÛi recursivamente as sub·rvores esquerda e direita
     arvore->left = construirArvore(array, inicio, meio - 1);
     arvore->right = construirArvore(array, meio + 1, fim);
 
@@ -186,48 +184,49 @@ int main()
     struct node *lista_encadeada = NULL;
     struct arvore *arvore_bi = NULL;
     srand(time(0));
-    int quant_num=10000;
-    int array_randoms[10000];
+    int quant_num=100001;
+    int *array_randoms = malloc(quant_num * sizeof(int));
+    if (array_randoms == NULL) {
+        printf("Erro ao alocar mem√≥ria.\n");
+        return EXIT_FAILURE;
+    }
     int index_array_randoms = 0;
     int y=0;
-    while(y<=quant_num){
-
+    while(y<quant_num){
+        
         array_randoms[y]=y;
         y++;
     }
-    printf("Array de Numeros randomizados: %d\n",y);
-    printRandoms(array_randoms,y);
+    printf("Array de Numeros randomizados:\n");
+    //printRandoms(array_randoms,y);
     printf("\n");
-
+    
     y = y-1;
     while(y>=0){
         lista_encadeada = inserirLista(lista_encadeada,array_randoms[y]);
         y--;
     }
-
-    int tamanho = sizeof(array_randoms) / sizeof(array_randoms[0]);
-
-    arvore_bi = construirArvore(array_randoms,0,tamanho-1);
-    if(arvore_bi==NULL){
-        printf("TA VAZIA\n");
-    }
-
+    
+    //int tamanho = sizeof(array_randoms) / sizeof(array_randoms[0]);
+    
+    arvore_bi = construirArvore(array_randoms,0,quant_num-1);
+    
     printf("Lista Encadeada:\n");
-    printLista(lista_encadeada);
+    //printLista(lista_encadeada);
     printf("\n");
     printf("Arvore em Ordem:\n");
     struct arvore *auxarvore = arvore_bi;
-    printArvoreEmOrdem(auxarvore);
+    //printArvoreEmOrdem(auxarvore);
     printf("\n");
-
-    int quant_search = 9999;
-
-    int matriz[9999][3];
+    
+    int quant_search = 50000;
+    
+    int matriz[50000][3];
     int index_matriz_search = 0;
-
+    
     while(quant_search>0){
-
-        int random_num = giveRandom(0,10000);
+        
+        int random_num = giveRandom(0,100000);
         if(jaFoiMatriz(matriz,random_num,index_matriz_search)){
             quant_search++;
         }else{
@@ -243,36 +242,37 @@ int main()
         }
         quant_search--;
     }
-
-    memset(array_randoms,0,10000);
-    char matrizz[9999][30];
+    
+    free(array_randoms);
+    //memset(array_randoms,0,60000);
+    char matrizz[50000][20];
     int index_matriz_colocar=0;
-
-    colocar(matrizz,matriz, index_matriz_search,&index_matriz_colocar);
-    printf("\n\n\n");
-    printMatrizColocar(matrizz,index_matriz_colocar);
+    
+    colocar(matrizz,matriz,index_matriz_search,&index_matriz_colocar);
+    //printf("\n\n\n");
+    //printMatrizColocar(matrizz,index_matriz_colocar);
     printf("\n\n\n");
 
     FILE *fPtr;
     fPtr = fopen("data.txt", "w");
-
+    
     if(fPtr == NULL)
     {
         printf("Unable to create file.\n");
         exit(EXIT_FAILURE);
     }
-
+    
     int i=0;
     while(i<index_matriz_search){
         fputs(matrizz[i], fPtr);
         fputs("\n", fPtr);
         i++;
     }
-
+    
     fclose(fPtr);
-
-    memset(matrizz,'\0',1000);
-    memset(matriz,0,1000);
+    
+    memset(matrizz,'\0',50000);
+    memset(matriz,0,50000);
 
     return 0;
 }
