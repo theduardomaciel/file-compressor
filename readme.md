@@ -1,104 +1,40 @@
 <h1 align="center">
-    File Compressor - Huffman
+    Projeto AB2 - Estrutura de Dados
 </h1>
 
-<picture>
+<!-- <picture>
   <source media="(prefers-color-scheme: dark)" srcset="/.github/cover.png">
   <source media="(prefers-color-scheme: light)" srcset="/.github/cover_light.png">
   <img alt="Main project cover" src="/.github/cover_light.png">
-</picture>
+</picture> -->
 
 ## 💻 Projeto
 
 Um compactador e descompactador de arquivos com base no Algoritmo de Huffman, desenvolvido como AV2 da disciplina de Estrutura de Dados por discentes do curso de Ciência da Computação.
 
-#### 🧭 Disponível inicialmente para Terminal
-
-<br />
-
-## ✨ Tecnologias
-
-| Backend |
-| ------- |
-| C       |
-
 <br />
 
 > [!WARNING]
-> O projeto encontra-se em desenvolvimento, portanto, diversos aspectos estarão inacabados e/ou não funcionais, à medida que a aplicação torna-se mais robusta.
+> O projeto encontra-se em constante desenvolvimento, portanto, alguns aspectos podem estar ineficientes e bugs podem estar presentes, à medida que a aplicação torna-se mais robusta.
 
 <br />
 
-## 🧠 Princípios
+## 📦 Módulos
 
-1.  Ser capaz de **compactar e descompactar** QUALQUER tipo de arquivo
-2.  Todos os Tipos Abstratos de Dados (TADs) devem ser **documentados**
-3.  Todas as estruturas de dados devem ser implementadas com `*void`
-4.  Toda as estruturas de dados utilizadas no projeto devem possuir **Casos de Testes Unitários**
-5.  Padronização do código deve ser feita toda em `snake_case`
+1.  Apresentar um seminário acerca de Árvores Red-Black
+2.  Codificação de Huffman
+3.  Contagem e plotagem de comparações entre Lista e Árvore de Busca Binária
 
-<br />
-
-## 🔧 Compilação e execução
-
-A fim de facilitar o processo de _compilação_ do código durante a fase de desenvolvimento e testes, tendo em visto o alto grau de modularização do projeto, o repositório faz uso de um arquivo `Makefile`, responsável por lidar com o gerenciamento de dependências nos arquivos `.c`.  
-Durante o desenvolvimento com o Visual Studio Code (VSCode), para que o processo de _build_ ocorra corretamente, [baixe a extensão](https://marketplace.visualstudio.com/items?itemName=ms-vscode.makefile-tools) disponibilizada pela Microsoft para esse tipo de arquivo.
-
-<br />
-
-Quando necessário executar a aplicação, utilize no terminal:
-
-```
-make run INPUT=<nome do arquivo com extensão>
-```
-
-> Caso seja de interesse **somente** compilar o código, sem executá-lo logo em seguida, utilize somente `make`
-
-> [!NOTE]
-> Os arquivos a serem compilados e descompilados devem ser inseridos na pasta `inputs`, presente na raiz do projeto.
-
-<br />
-
-Caso seja necessário realizar uma limpeza dos arquivos locais, utilize no terminal:
-
-```
-make clean
-```
-
-<br />
-
-#### Diferença entre arquivos `.c` e `.h`
-
-- .c: arquivo c (onde está a ação real, em geral)
-
-- .h: arquivo de cabeçalho (a ser incluído em uma diretiva #include do pré-processador). Contém coisas que normalmente são compartilhadas com outras partes do código, como protótipos de funções, declarações #define' e assim por diante.
-
-> [!NOTE]  
-> Caso queira saber mais sobre como a modularização e arquivos `Makefile` funcionam, visite estes links:
->
-> - [Programação modular em C - forcepush.tech](https://forcepush.tech/modular-programming-in-c)
-> - ["o que as extensões de arquivo c e h significam para c" - stackoverflow.com](https://stackoverflow.com/questions/1695224/what-do-c-and-h-file-extensions-mean-to-c)
-
-<br />
-
-## 🧪 Testes unitários
-
-Como parte do processo de desenvolvimento, é necessário que todos os módulos e estruturas de dados implementadas possuam testes unitários.  
-~~Os testes unitários são realizados com a biblioteca `cmocka`, que é uma biblioteca de teste unitário para C.~~
-
-Para executar os testes unitários, utilize no terminal:
-
-```
-make test
-```
+> Para melhor organização entre os módulos, sugere-se a padronização em `snake_case`
 
 <br />
 
 ## 🚧 Roadmap
 
-- [x] Desenvolver os módulos de `heap` e `árvore de huffman` para utilização nos processos de compressão e descompressão
-- [x] Implementar o algoritmo básico para compressão
-- [ ] Criar casos de testes unitários para as estruturas de dados usadas
+- [x] Implementar algoritmo de Huffman para compressão de arquivos
+- [x] Pesquisar e criar seminário sobre Árvore Rubro-negra (Red-black)
+- [x] Desenvolver plotagem e comparação entre Lista x Árvore de Busca Binária
+- [ ] Unificar módulos do projeto neste repositório único
 
 <br />
 
@@ -109,29 +45,3 @@ make test
 - [ ] [Lucas Cassiano Maciel dos Santos](https://github.com/lucas7maciel)
 - [ ] [Josenilton Ferreira da Silva Junior](https://github.com/914joseph)
 - [ ] [Maria Letícia Ventura de Oliveira](https://github.com/letsventura)
-
-<br />
-
-## 🔗 Links úteis
-
-#### Teoria
-
-| Vídeos                                                                                                  | Artigos                                                                                      |
-| ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| [Básico do Algoritmo de Huffman _(curto e bem didático!)_](https://www.youtube.com/watch?v=JsTptu56GM8) | [Codificação de Huffman - Wikipedia em inglês](https://en.wikipedia.org/wiki/Huffman_coding) |
-| [História e Funcionamento do Código de Huffman](https://www.youtube.com/watch?v=B3y0RsVCyrw)            |                                                                                              |
-
-#### Implementação
-
-- [Codificação Huffman - Geeks for Geeks](https://www.youtube.com/watch?v=0kNXhFIEd_w&t=413s)
-- [Codificação Huffman Eficiente - Geeks for Geeks](https://www.youtube.com/watch?v=IX810fNtTzU&t=12s)
-
-#### Documentação
-
-- [Guia para a documentação do código em C com Doxygen](https://embeddedinventor.com/guide-to-configure-doxygen-to-document-c-source-code-for-beginners/)
-
-#### Testes unitários
-
-- [Framework de testes para C](https://cmocka.org/)
-
-<br />
