@@ -3,15 +3,16 @@ from os import system
 import sys
 import numpy as np
 
-#Gets args (if they exist)
+#Gets cmd args (if they exist)
 ordenado = False if "desordenado" in sys.argv else True
 escalado = False if "escalado" not in sys.argv else True
 recorte = False if "recorte" not in sys.argv else True
+novo = False if "previous" in sys.argv else True 
 
 #Generates new numbers
-if ordenado:
+if ordenado and novo:
     system("gcc gerar_ordenado.c -o data && data")
-else:
+elif novo:
     system("gcc gerar_desordenado.c -o data && data")
 
 #Gets generated file data
@@ -53,10 +54,11 @@ if ordenado:
     for i in range(n-1):
         for j in range(0, n-i-1):
             if gerados[j] > gerados[j + 1]:
-                swapped = True
                 gerados[j], gerados[j + 1] = gerados[j + 1], gerados[j]
                 listas[j], listas[j + 1] = listas[j + 1], listas[j]
                 arvores[j], arvores[j + 1] = arvores[j + 1], arvores[j]
+
+                swapped = True
             
         if not swapped:
             break
@@ -88,6 +90,7 @@ else:
 
     fig, ax1 = plt.subplots()
 
+    #Sets color, width and path of yaxis1
     color = 'tab:red'
     ax1.plot(x, listas, color=color)
     line1, = ax1.plot(x, listas, color=color, label='Listas Encadeadas')
@@ -95,6 +98,7 @@ else:
 
     ax2 = ax1.twinx()
 
+    #Sets color, width and path of yaxis2
     color = 'tab:blue'
     ax2.plot(x, arvores, color=color)
     line2, = ax2.plot(x, arvores, color=color, label='Árvores de Busca Binárias')
@@ -105,7 +109,7 @@ else:
 for x in range(len(gerados)):
     print(f"{gerados[x]} {listas[x]} {arvores[x]}")
 
-    #marcar pontos que se cruzam
+    #Label points that have the same value on both lists
     if (listas[x] == arvores[x] and not escalado):
         plt.annotate('.', xy=(gerados[x], listas[x]), color='purple', fontsize=15)
         plt.annotate(listas[x], xy=(gerados[x] - 1.5, listas[x] + 5), color='purple', fontsize=12)
