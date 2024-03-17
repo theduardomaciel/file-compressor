@@ -3,9 +3,9 @@
 </h1>
 
 <!-- <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="/.github/cover.png">
-  <source media="(prefers-color-scheme: light)" srcset="/.github/cover_light.png">
-  <img alt="Main project cover" src="/.github/cover_light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="./.github/cover.png">
+  <source media="(prefers-color-scheme: light)" srcset="./.github/cover_light.png">
+  <img alt="Red-black tree seminary module cover" src="/.github/cover_light.png">
 </picture> -->
 
 ## 💻 Projeto
