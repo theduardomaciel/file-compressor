@@ -8,24 +8,18 @@
   <img alt="Main project cover" src="/.github/cover_light.png">
 </picture> -->
 
-## 💻 Projeto
+## 📦 Módulos
 
-Um compactador e descompactador de arquivos com base no Algoritmo de Huffman, desenvolvido como AV2 da disciplina de Estrutura de Dados por discentes do curso de Ciência da Computação.
+1.  Apresentar um **seminário** acerca de **Árvores Red-Black**
+2.  **Codificação de Huffman**
+3.  **Contagem e plotagem** de comparações entre **Lista x Árvore de Busca Binária**
+
+> Para melhor organização entre os módulos, sugere-se que os códigos estejam escritos em padrão `snake_case`
 
 <br />
 
 > [!WARNING]
 > O projeto encontra-se em constante desenvolvimento, portanto, alguns aspectos podem estar ineficientes e bugs podem estar presentes, à medida que a aplicação torna-se mais robusta.
-
-<br />
-
-## 📦 Módulos
-
-1.  Apresentar um seminário acerca de Árvores Red-Black
-2.  Codificação de Huffman
-3.  Contagem e plotagem de comparações entre Lista e Árvore de Busca Binária
-
-> Para melhor organização entre os módulos, sugere-se a padronização em `snake_case`
 
 <br />
 
