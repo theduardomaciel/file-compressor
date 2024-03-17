@@ -1,8 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-
-#include "utils.h"
 #include "stack.h"
 
 /*
@@ -10,7 +5,6 @@
     São funções que podem ser acessadas por qualquer arquivo que inclua este arquivo
 */
 
-// Função para inicializar a pilha
 stack *stack_init()
 {
     stack *new_stack = malloc(sizeof(stack));
@@ -22,7 +16,6 @@ stack *stack_init()
     return (new_stack);
 }
 
-// Função para adicionar um elemento no início da pilha
 void stack_push(stack *stack, void *data)
 {
     stack_node *new_node = malloc(sizeof(stack_node));
@@ -35,7 +28,6 @@ void stack_push(stack *stack, void *data)
     stack->size++;
 }
 
-// Função para remover um elemento do início da pilha
 void *stack_pop(stack *stack)
 {
     if (stack->top == NULL)
@@ -54,7 +46,6 @@ void *stack_pop(stack *stack)
     return data;
 }
 
-// Função para copiar a pilha
 stack *stack_copy(stack *stack)
 {
     stack_node *new_stack = stack_init();
@@ -69,7 +60,6 @@ stack *stack_copy(stack *stack)
     return new_stack;
 }
 
-// Função para destruir a pilha
 void stack_destroy(stack *stack)
 {
     stack_node *current = stack->top;

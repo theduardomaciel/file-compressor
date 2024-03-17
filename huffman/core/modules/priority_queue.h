@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+#include "utils.h"
+
 #ifndef PRIORITY_QUEUE_H
 #define PRIORITY_QUEUE_H
 

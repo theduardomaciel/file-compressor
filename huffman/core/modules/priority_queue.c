@@ -1,4 +1,3 @@
-#include "utils.h"
 #include "priority_queue.h"
 
 /*
@@ -35,7 +34,6 @@ void swap(void **a, void **b);
     São funções que podem ser acessadas por qualquer arquivo que inclua este arquivo
 */
 
-// Função para inicializar a fila de prioridade
 priority_queue *init_priority_queue(int capacity, int (*comparator)(const void *d1, const void *d2))
 {
     priority_queue *new_pq = NULL;

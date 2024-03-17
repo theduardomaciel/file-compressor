@@ -1,6 +1,4 @@
-#include "priority_queue.h"
 #include "huffman_tree.h"
-#include "utils.h"
 
 /*
     ⮕ Funções públicas

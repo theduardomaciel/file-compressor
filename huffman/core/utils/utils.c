@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "utils.h"
 
 char *concat_strings(const char *s1, const char *s2)
 {

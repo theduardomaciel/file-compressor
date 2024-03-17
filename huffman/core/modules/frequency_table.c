@@ -1,5 +1,4 @@
 #include "frequency_table.h"
-#include "utils.h"
 
 uint64_t *build_frequency_table(FILE *input)
 {

@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #ifndef UTILS_H
 #define UTILS_H
@@ -36,7 +38,7 @@
  *
  * @param s1 A primeira string.
  * @param s2 A segunda string.
- * @return Um ponteiro para a nova string resultante da concatenação.
+ * @return char* Um ponteiro para a nova string resultante da concatenação.
  */
 char *concat_strings(const char *s1, const char *s2);
 
