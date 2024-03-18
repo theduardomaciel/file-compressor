@@ -52,10 +52,12 @@ void compress(FILE *input, char *output_path)
     // Para isso, criamos uma variável que armazena o byte que será escrito no arquivo enquanto percorremos o dicionário
     uint8_t new_byte = 0;
 
+    // Cada byte do arquivo
     while (fread(&current_byte, sizeof(uint8_t), 1, input) == 1)
     {
         stack_node *current = bytes_dictionary[current_byte]->top;
 
+        // Cada bit (8 bits) do arquivo
         while (current != NULL)
         {
             // Como o novo byte é inicializado com 0, somente nos preocupamos em setar os bits 1s

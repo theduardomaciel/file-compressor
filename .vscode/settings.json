@@ -9,6 +9,10 @@
         ".env.example": "properties",
         "huffman_tree.h": "c",
         "priority_queue.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "cunit.h": "c",
+        "basic.h": "c",
+        "frequency_table.h": "c",
+        "cstddef": "c"
     }
 }

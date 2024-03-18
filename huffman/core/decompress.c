@@ -22,20 +22,21 @@ void decompress(FILE *input, char *output_path)
     NULL_POINTER_CHECK(tree);
 
     // print_pre_order(tree);
-    // print_tree_visually(tree, 0, '-');
+    print_tree_visually(tree, 0, '-');
 
     // Criamos o arquivo de saída agora, a fim de evitar o gasto de recursos caso nos deparemos com algum erro durante a descompressão
     FILE *output_file = open_file(output_path, "wb");
 
     uint64_t bytes_to_read = file_header->file_size - (file_header->tree_size + sizeof(uint16_t));
     printf("Tamanho do arquivo comprimido: %lu\n", file_header->file_size);
-    // printf("Bytes para ler: %lu\n", bytes_to_read);
+    printf("Bytes para ler: %lu\n", bytes_to_read);
 
     // Realizamos a leitura dos novos bytes descomprimidos no arquivo de saída
     huffman_node *current_node = tree;
     uint8_t byte;
 
-    for (uint64_t i = 0; i < bytes_to_read; i++)
+    // Lemos os bytes do arquivo de entrada, exceto o último, que pode conter lixo
+    for (uint64_t i = 0; i < bytes_to_read - 1; i++)
     {
         fread(&byte, sizeof(uint8_t), 1, input);
 
@@ -60,6 +61,9 @@ void decompress(FILE *input, char *output_path)
             }
         }
     }
+
+    // Lemos o último byte do arquivo de entrada, que pode conter lixo
+    fread(&byte, sizeof(uint8_t), 1, input);
 
     // Fechamos os arquivos de saída
     fclose(output_file);
