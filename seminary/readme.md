@@ -10,7 +10,7 @@
 
 ## 💻 Projeto
 
-...
+[Confira os slides da Apresentação! ](https://docs.google.com/presentation/d/1MX6DlRzmEHDsSnrnLNHzYsB-b1RTej4L/edit?usp=sharing&ouid=101558031075219555341&rtpof=true&sd=true)
 
 <br />
 

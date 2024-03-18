@@ -10,19 +10,26 @@
 
 ## 💻 Projeto
 
-...
+Um sistema que gera um arquivo de texto contendo números aleatórios e a quantidade de comparações necessárias para encontrá-los em uma lista encadeada e uma arvore binária de busca, bem como a geração de um gráfico contendo as informações de complexidade dessas estruturas.
 
 <br />
 
 ## 🧠 Princípios
 
-1.  ...
+1.  Armazenar muitos dados em ambas as estruturas
+2.  Realizar o sorteio de um número e contar a quantidade de comparações nas estruturas
+3.  Os dados devem ser gerados e plotados na hora da apresentação
 
 <br />
 
 ## 🚧 Roadmap
 
-- [ ] ...
+- [x] Criar e inserir valores na Lista Encadeada e na Árvore Binária de Busca
+- [x] Sortear números aleatórios
+- [x] Contar a quantidade de comparações em cada número sorteado
+- [x] Colocar esses dados obtidos em um .txt
+- [x] Aumentar consideravelmente o tamanho das estruturas
+- [x] Gerar um gráfico mostrando a complexidade das estruturas
 
 <br />
 
