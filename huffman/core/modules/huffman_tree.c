@@ -8,6 +8,8 @@
 huffman_node *ht_init()
 {
     huffman_node *tree = malloc(sizeof(huffman_node));
+    tree->data = NULL;
+    tree->frequency = 0;
     tree->left = NULL;
     tree->right = NULL;
     return tree;
@@ -96,6 +98,17 @@ void ht_pre_order(huffman_node *root, void (*callback)(void *data, void *arg), v
     stack_destroy(stack);
 }
 
+void ht_destroy(huffman_node *root)
+{
+    if (root != NULL)
+    {
+        ht_destroy(root->left);
+        ht_destroy(root->right);
+        free(root->data);
+        free(root);
+    }
+}
+
 huffman_node *build_huffman_tree(priority_queue *queue)
 {
     NULL_POINTER_CHECK(queue);
@@ -129,40 +142,6 @@ huffman_node *build_huffman_tree(priority_queue *queue)
     }
 
     return (huffman_node *)pq_dequeue(queue);
-}
-
-void build_bytes_dictionary(huffman_node *root, stack **bytes_dictionary, stack *current_path)
-{
-    if (root != NULL)
-    {
-        // Se tivermos chegado a uma folha, copiamos o caminho até ela para o dicionário
-        if (is_leaf(root))
-        {
-            stack *new_path = stack_copy(current_path);
-            bytes_dictionary[*(uint8_t *)root->data] = new_path; // utilizamos o byte correspondente ao nó como índice no dicionário
-        }
-        else
-        {
-            // Se não tivermos chegado a uma folha, precisamos continuar a percorrer a árvore
-
-            // Primeiro, empurramos um novo bit para o byte atual. Se estiver percorrendo a esquerda, empurramos 0, caso contrário, 1
-            // Em seguida, chamamos a função recursivamente para o ramo da árvore, o que repete o processo até encontrar uma folha
-            // Depois de explorar o ramo completamente, desempilhamos o bit adicionado
-            // Isso nos permite voltar um nível na árvore e explorar o outro ramo
-
-            stack_push(current_path, malloc(sizeof(uint8_t)));
-            *(uint8_t *)current_path->top->data = 0;
-
-            build_bytes_dictionary(root->left, bytes_dictionary, current_path);
-            stack_pop(current_path);
-
-            stack_push(current_path, malloc(sizeof(uint8_t)));
-            *(uint8_t *)current_path->top->data = 1;
-
-            build_bytes_dictionary(root->right, bytes_dictionary, current_path);
-            stack_pop(current_path);
-        }
-    }
 }
 
 // Nós internos sempre serão representados por um *, no entanto, para diferenciá-lo de uma folha, precisamos 'escapar' o caractere
@@ -223,7 +202,7 @@ void pq_print(priority_queue *pq)
         return;
     }
 
-    priority_queue *pq_copy = init_priority_queue(pq->capacity, pq->comparator);
+    priority_queue *pq_copy = pq_init(pq->capacity, pq->comparator);
 
     for (size_t i = 0; i < pq->size; i++)
     {

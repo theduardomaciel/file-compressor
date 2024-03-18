@@ -1,6 +1,9 @@
 #include <stdio.h>
+
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
+
+#include "stack.h"
 
 #ifndef STACK_TEST_H
 #define STACK_TEST_H

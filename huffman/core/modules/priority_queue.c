@@ -34,7 +34,7 @@ void swap(void **a, void **b);
     São funções que podem ser acessadas por qualquer arquivo que inclua este arquivo
 */
 
-priority_queue *init_priority_queue(int capacity, int (*comparator)(const void *d1, const void *d2))
+priority_queue *pq_init(int capacity, int (*comparator)(const void *d1, const void *d2))
 {
     priority_queue *new_pq = NULL;
     NULL_POINTER_CHECK(comparator);

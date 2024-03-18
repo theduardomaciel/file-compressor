@@ -33,6 +33,13 @@ uint64_t *build_frequency_table(FILE *input)
     return frequency_table;
 }
 
+/**
+ * Função de comparação utilizada para ordenar os elementos em uma tabela de frequência.
+ *
+ * @param d1 O primeiro elemento a ser comparado.
+ * @param d2 O segundo elemento a ser comparado.
+ * @return Um valor negativo se d1 for maior que d2 e um valor positivo se d1 for menor ou igual a d2.
+ */
 int compare(const void *d1, const void *d2)
 {
     huffman_node *n1 = (huffman_node *)d1;
@@ -56,7 +63,7 @@ priority_queue *build_frequency_queue(uint64_t *frequency_table)
 {
     NULL_POINTER_CHECK(frequency_table);
 
-    priority_queue *queue = init_priority_queue(MAX_SIZE, compare);
+    priority_queue *queue = pq_init(MAX_SIZE, compare);
 
     // Adiciona todos os bytes que aparecem no arquivo (têm frequência maior que 0) na fila de prioridade
     for (uint64_t i = 0; i < MAX_SIZE; i++)
@@ -77,4 +84,38 @@ priority_queue *build_frequency_queue(uint64_t *frequency_table)
     // pq_print(queue);
 
     return queue;
+}
+
+void build_bytes_dictionary(huffman_node *root, stack **bytes_dictionary, stack *current_path)
+{
+    if (root != NULL)
+    {
+        // Se tivermos chegado a uma folha, copiamos o caminho até ela para o dicionário
+        if (is_leaf(root))
+        {
+            stack *new_path = stack_copy(current_path);
+            bytes_dictionary[*(uint8_t *)root->data] = new_path; // utilizamos o byte correspondente ao nó como índice no dicionário
+        }
+        else
+        {
+            // Se não tivermos chegado a uma folha, precisamos continuar a percorrer a árvore
+
+            // Primeiro, empurramos um novo bit para o byte atual. Se estiver percorrendo a esquerda, empurramos 0, caso contrário, 1
+            // Em seguida, chamamos a função recursivamente para o ramo da árvore, o que repete o processo até encontrar uma folha
+            // Depois de explorar o ramo completamente, desempilhamos o bit adicionado
+            // Isso nos permite voltar um nível na árvore e explorar o outro ramo
+
+            stack_push(current_path, malloc(sizeof(uint8_t)));
+            *(uint8_t *)current_path->top->data = 0;
+
+            build_bytes_dictionary(root->left, bytes_dictionary, current_path);
+            stack_pop(current_path);
+
+            stack_push(current_path, malloc(sizeof(uint8_t)));
+            *(uint8_t *)current_path->top->data = 1;
+
+            build_bytes_dictionary(root->right, bytes_dictionary, current_path);
+            stack_pop(current_path);
+        }
+    }
 }

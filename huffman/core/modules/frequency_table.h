@@ -25,16 +25,23 @@
 uint64_t *build_frequency_table(FILE *input);
 
 /**
- * Constrói uma fila de prioridade a partir de uma tabela de frequência.
+ * @brief Constrói uma fila de prioridade com base na tabela de frequências fornecida.
  *
- * Esta função recebe como parâmetro um ponteiro para uma tabela de frequência representada por um array de uint64_t.
- * A tabela de frequência contém a contagem de ocorrências de cada símbolo em um arquivo.
- * A função cria e retorna uma fila de prioridade, onde os elementos são organizados de acordo com suas frequências.
- *
- * @param frequency_table Um ponteiro para a tabela de frequência
- *
- * @return priority_queue* Um ponteiro para a fila de prioridade construída
+ * @param frequency_table A tabela de frequências.
+ * @return priority_queue* Um ponteiro para a fila de prioridade construída.
  */
-priority_queue *build_priority_queue(uint64_t *frequency_table);
+priority_queue *build_frequency_queue(uint64_t *frequency_table);
+
+/**
+ * @brief Constrói um dicionário de bytes com base na árvore de Huffman fornecida.
+ *
+ * @param root A raiz da árvore de Huffman.
+ * @param bytes_dictionary Um ponteiro para o dicionário de bytes a ser construído.
+ * @param path O caminho atual na árvore de Huffman.
+ */
+void build_bytes_dictionary(huffman_node *root, stack **bytes_dictionary, stack *path);
+
+// Obs.: No futuro, buscar transformar a função acima em uma função que retorna um ponteiro para um dicionário de bytes
+// Atualmente não é possível pois nenhuma sugestão de solução que não utilize recursão foi encontrada
 
 #endif // FREQUENCY_TABLE_H

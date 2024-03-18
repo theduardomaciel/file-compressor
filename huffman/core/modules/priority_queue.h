@@ -31,7 +31,7 @@ typedef struct
  *
  * @return Um ponteiro para a estrutura de Fila de Prioridade alocada, ou NULL se ocorrer um erro na alocação de memória.
  */
-priority_queue *init_priority_queue(int capacity, int (*comparator)(const void *d1, const void *d2));
+priority_queue *pq_init(int capacity, int (*comparator)(const void *d1, const void *d2));
 
 /**
  * @brief Função responsável por destruir uma fila de prioridade.

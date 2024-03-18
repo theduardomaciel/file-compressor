@@ -14,6 +14,9 @@
         "basic.h": "c",
         "frequency_table.h": "c",
         "cstddef": "c",
-        "main.h": "c"
+        "main.h": "c",
+        "stack_test.h": "c",
+        "stdio.h": "c",
+        "stack.h": "c"
     }
 }

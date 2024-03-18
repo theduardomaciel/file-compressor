@@ -70,24 +70,11 @@ int ht_get_tree_size(huffman_node *root);
 void ht_pre_order(huffman_node *root, void (*callback)(void *data, void *arg), void *arg);
 
 /**
- * @brief Constrói uma fila de prioridade com base na tabela de frequências fornecida.
- *
- * @param frequency_table A tabela de frequências.
- * @return priority_queue* Um ponteiro para a fila de prioridade construída.
- */
-priority_queue *build_frequency_queue(uint64_t *frequency_table);
-
-/**
- * @brief Constrói um dicionário de bytes com base na árvore de Huffman fornecida.
+ * @brief Libera a memória alocada para a árvore de Huffman.
  *
  * @param root A raiz da árvore de Huffman.
- * @param bytes_dictionary Um ponteiro para o dicionário de bytes a ser construído.
- * @param path O caminho atual na árvore de Huffman.
  */
-void build_bytes_dictionary(huffman_node *root, stack **bytes_dictionary, stack *path);
-
-// Obs.: No futuro, buscar transformar a função acima em uma função que retorna um ponteiro para um dicionário de bytes
-// Atualmente não é possível pois nenhuma sugestão de solução que não utilize recursão foi encontrada
+void ht_destroy(huffman_node *root);
 
 /**
  * @brief Constrói uma árvore de Huffman com base na fila de prioridade fornecida.
@@ -96,6 +83,14 @@ void build_bytes_dictionary(huffman_node *root, stack **bytes_dictionary, stack 
  * @return huffman_node* Um ponteiro para a raiz da árvore de Huffman construída.
  */
 huffman_node *build_huffman_tree(priority_queue *queue);
+
+/**
+ * @brief Reconstrói uma árvore de Huffman com base na representação em pré-ordem fornecida.
+ *
+ * @param header_tree A representação em pré-ordem da árvore de Huffman.
+ * @return huffman_node* Um ponteiro para a raiz da árvore de Huffman reconstruída.
+ */
+huffman_node *rebuild_huffman_tree(uint8_t **header_tree);
 
 /*
     ⮕ Declarações das funções de impressão

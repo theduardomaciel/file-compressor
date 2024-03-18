@@ -57,7 +57,6 @@ void decompress(FILE *input, char *output_path)
         fread(&current_byte, sizeof(uint8_t), 1, input);
 
         process_byte(current_byte, &state);
-        // process_byte(current_byte, &(BitProcessingState){tree, &current_node, output_file, 0});
     }
 
     // Lemos o último byte do arquivo de entrada, até o tamanho do lixo, caso ele exista
@@ -70,7 +69,6 @@ void decompress(FILE *input, char *output_path)
         state.end_bit = file_header->trash_size;
 
         process_byte(current_byte, &state);
-        // process_byte(current_byte, &(BitProcessingState){tree, &current_node, output_file, file_header->trash_size});
     }
 
     // Fechamos os arquivos de saída
@@ -100,3 +98,6 @@ void process_byte(uint8_t byte, BitProcessingState *state)
         }
     }
 }
+
+// Também pode ser chamada no seguinte formato:
+// process_byte(current_byte, &(BitProcessingState){tree, &current_node, output_file, 0});
