@@ -1,13 +1,15 @@
 import matplotlib.pyplot as plt
-from os import system
 import sys
 import numpy as np
+from os import system
 
 #Gets cmd args (if they exist)
 ordenado = False if "desordenado" in sys.argv else True
 escalado = False if "escalado" not in sys.argv else True
 recorte = False if "recorte" not in sys.argv else True
-novo = False if "previous" in sys.argv else True 
+novo = False if "previous" in sys.argv else True
+onlyListas = False if not "listas" in sys.argv else True
+onlyArvores = False if not "arvores" in sys.argv else True
 
 #Generates new numbers
 if ordenado and novo:
@@ -45,28 +47,11 @@ while True:
 file.close()
 
 #Sorts the lists
-if ordenado:
-    print("Ordenando")
-
-    n = len(gerados)
-    swapped = False
-
-    for i in range(n-1):
-        for j in range(0, n-i-1):
-            if gerados[j] > gerados[j + 1]:
-                gerados[j], gerados[j + 1] = gerados[j + 1], gerados[j]
-                listas[j], listas[j + 1] = listas[j + 1], listas[j]
-                arvores[j], arvores[j + 1] = arvores[j + 1], arvores[j]
-
-                swapped = True
-            
-        if not swapped:
-            break
-
-else:
-    #gerados = [1, 2, 3... n]
+if not ordenado:
+    ##gerados = [1, 2, 3... n]
     listas = sorted(listas)
     arvores = sorted(arvores)
+    pass
 
 
 if recorte:
@@ -76,13 +61,15 @@ if recorte:
 
 
 #Sets graph's styling
-if not escalado:
-    plt.plot(gerados, listas, label="Listas Encadeadas")
-    plt.plot(gerados, arvores, label="Árvores de Busca")
+if not escalado or onlyListas or onlyArvores:
+    #Sets width, color and path of each data structure
+    if not onlyArvores:
+        plt.plot(gerados, listas, label="Listas Encadeadas")
+        plt.annotate(f'{listas[-1]}', xy=(max(gerados) - 5, listas[-1] - 10), color='blue')
 
-    #Annotates the biggest values of each comparison
-    plt.annotate(f'{listas[-1]}', xy=(max(gerados) - 5, listas[-1] - 10), color='blue')
-    plt.annotate(f'{arvores[-1]}', xy=(max(gerados) - 5, arvores[-1] + 4), color='red')
+    if not onlyListas:
+        plt.plot(gerados, arvores, label="Árvores de Busca")
+        plt.annotate(f'{arvores[-1]}', xy=(max(gerados) - 5, arvores[-1] + 4), color='red')
 
     plt.legend()
 else:
@@ -107,12 +94,11 @@ else:
     ax1.legend(handles=[line1, line2])
 
 for x in range(len(gerados)):
-    print(f"{gerados[x]} {listas[x]} {arvores[x]}")
-
     #Label points that have the same value on both lists
     if (listas[x] == arvores[x] and not escalado):
-        plt.annotate('.', xy=(gerados[x], listas[x]), color='purple', fontsize=15)
+        plt.annotate('.', xy=(gerados[x], listas[x]), color='purple', fontsize=16)
         plt.annotate(listas[x], xy=(gerados[x] - 1.5, listas[x] + 5), color='purple', fontsize=12)
+        break
 
 plt.title("Listas Encadeadas x Árvores de Busca Binárias")
 plt.xlabel('Elementos')
