@@ -24,7 +24,11 @@ Um sistema que gera um arquivo de texto contendo números aleatórios e a quanti
 
 ## 🚧 Roadmap
 
-- [ ] ...
+- [x] Criar e inserir valores na Lista Encadeada e na Árvore Binária de Busca
+- [x] Sortear números aleatórios
+- [x] Contar a quantidade de comparações em cada número sorteado
+- [x] Colocar esses dados obtidos em um .txt
+- [x] Aumentar consideravelmente o tamanho das estruturas
 
 <br />
 
