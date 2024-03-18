@@ -68,8 +68,11 @@ header_data *header_read(FILE *file)
     // 2. Extraímos o tamanho do lixo e o tamanho da árvore de Huffman
     header_data *data = malloc(sizeof(header_data));
 
+    // Obtemos o tamanho do lixo deslocando os bits do primeiro byte para a direita
+    // Fazemos isso para que os 3 bits mais significativos sejam os 3 primeiros bits do byte
     data->trash_size = first_byte >> 5;
-    data->tree_size = (first_byte & 0x1F) << 8 | second_byte;
+
+    data->tree_size = (first_byte & 0x1F) << 8 | second_byte; // 0x1F
 
     data->tree = malloc(data->tree_size);
     fread(data->tree, sizeof(uint8_t), data->tree_size, file);

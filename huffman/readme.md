@@ -77,25 +77,7 @@ make clean
 
 ## 🧪 Testes unitários
 
-Como parte do processo de desenvolvimento, é necessário que todos os módulos e estruturas de dados implementadas possuam testes unitários.  
-Os testes unitários são realizados com a biblioteca `CUnit`, capaz de realizar testes unitários para a linguagem C.
-
-Para executar os testes unitários, utilize no terminal:
-
-```
-make tests
-```
-
-> [!NOTE]
-> Para o correto funcionamento dos scripts envolvendo os testes unitários, torna-se necessária a instalação da biblioteca `CUnit` localmente.
-> Para a instalação em distribuições Linux baseadas em Debian, é possível utilizar os seguintes comandos:
->
-> ```bash
-> sudo apt-get update
-> sudo apt-get install libcunit1 libcunit1-dev
-> ```
-
-<br />
+Devido a problemas com a importação e compilação dos arquivos por meio do arquivo Makefile, incluímos os testes das estruturas utilizadas no algoritmo de Huffman no seguinte repositório: https://github.com/theduardomaciel/huffman-test-suite
 
 ## 🚧 Roadmap
 

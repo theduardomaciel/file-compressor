@@ -263,7 +263,7 @@ int main()
     struct node *lista_encadeada = NULL;
     struct arvore *arvore_bi = NULL; // inicialização das estruturas
     srand(time(0));                  // usando a função time(0) para gerar números aleatórios diferentes
-    int quant_num = 100001;
+    int quant_num = 101;
     int *array_randoms = malloc(quant_num * sizeof(int)); // alocação dinámica de memória do array para aumentar a capacidade
     if (array_randoms == NULL)
     {
@@ -299,7 +299,7 @@ int main()
     // printArvoreEmOrdem(auxarvore);
     printf("\n");
 
-    int quant_search = 5000, matriz_size = 5000; // quantidade de números que serão buscados
+    int quant_search = 100, matriz_size = 100; // quantidade de números que serão buscados
 
     int matriz[matriz_size][3]; // matriz que armazenará: número sorteado / comparações na lista / comparações na árvore
     int index_matriz_search = 0;
@@ -307,7 +307,7 @@ int main()
     while (quant_search > 0)
     {
 
-        int random_num = giveRandom(0, quant_num); // gera um número aleatório entre 0 e 100.000
+        int random_num = giveRandom(0, quant_num - 1); // gera um número aleatório entre 0 e 100.000
         if (jaFoiMatriz(matriz, random_num, index_matriz_search))
         { // verifica se esse número já foi sorteado anteriormente
             quant_search++;
@@ -349,7 +349,7 @@ int main()
     int i = 0;
     while (i < index_matriz_search)
     { // loop que adiciona cada lacuna da matriz no .txt
-        fprintf(fPtr,"%d %d %d", matriz[i][0],matriz[i][1],matriz[i][2]);
+        fprintf(fPtr, "%d %d %d", matriz[i][0], matriz[i][1], matriz[i][2]);
         fputs("\n", fPtr);
         i++;
     }

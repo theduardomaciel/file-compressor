@@ -2,6 +2,9 @@
 build/
 output/
 
+# Python
+plotting/env
+
 # Prerequisites
 *.d
 

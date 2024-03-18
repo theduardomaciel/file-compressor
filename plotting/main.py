@@ -13,9 +13,9 @@ onlyArvores = False if not "arvores" in sys.argv else True
 
 #Generates new numbers
 if ordenado and novo:
-    system("gcc gerar_ordenado.c -o data && data")
+    system("gcc gerar_ordenado.c -o data && ./data")
 elif novo:
-    system("gcc gerar_desordenado.c -o data && data")
+    system("gcc gerar_desordenado.c -o data && ./data")
 
 #Gets generated file data
 file = open("data.txt", "r")
