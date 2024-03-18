@@ -22,7 +22,7 @@ void decompress(FILE *input, char *output_path)
     NULL_POINTER_CHECK(tree);
 
     // print_pre_order(tree);
-    print_tree_visually(tree, 0, '-');
+    // print_tree_visually(tree, 0, '-');
 
     // Criamos o arquivo de saída agora, a fim de evitar o gasto de recursos caso nos deparemos com algum erro durante a descompressão
     FILE *output_file = open_file(output_path, "wb");
@@ -33,18 +33,18 @@ void decompress(FILE *input, char *output_path)
 
     // Realizamos a leitura dos novos bytes descomprimidos no arquivo de saída
     huffman_node *current_node = tree;
-    uint8_t byte;
+    uint8_t current_byte;
 
     // Lemos os bytes do arquivo de entrada, exceto o último, que pode conter lixo
-    for (uint64_t i = 0; i < bytes_to_read - 1; i++)
+    for (uint64_t byte_index = 0; byte_index < bytes_to_read - 1; byte_index++)
     {
-        fread(&byte, sizeof(uint8_t), 1, input);
+        fread(&current_byte, sizeof(uint8_t), 1, input);
 
         // Para cada bit do byte lido, percorremos a árvore de Huffman
         for (int j = 7; j >= 0; j--)
         {
             // Se o bit j do byte for 1, percorremos a árvore para a direita, caso contrário, percorremos para a esquerda
-            if (is_bit_i_set(byte, j))
+            if (is_bit_i_set(current_byte, j))
             {
                 current_node = current_node->right;
             }
@@ -62,8 +62,29 @@ void decompress(FILE *input, char *output_path)
         }
     }
 
-    // Lemos o último byte do arquivo de entrada, que pode conter lixo
-    fread(&byte, sizeof(uint8_t), 1, input);
+    // Lemos o último byte do arquivo de entrada, até o tamanho do lixo, caso ele exista
+    if (file_header->trash_size > 0)
+    {
+        fread(&current_byte, sizeof(uint8_t), 1, input);
+
+        for (int j = 7; j >= file_header->trash_size; j--)
+        {
+            if (is_bit_i_set(current_byte, j))
+            {
+                current_node = current_node->right;
+            }
+            else
+            {
+                current_node = current_node->left;
+            }
+
+            if (is_leaf(current_node))
+            {
+                fwrite(current_node->data, sizeof(uint8_t), 1, output_file);
+                current_node = tree;
+            }
+        }
+    }
 
     // Fechamos os arquivos de saída
     fclose(output_file);

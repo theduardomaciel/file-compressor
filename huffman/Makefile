@@ -14,9 +14,6 @@ UTILS_DIR = $(CORE_DIR)/utils
 SRCS := $(wildcard $(CORE_DIR)/*.c) $(wildcard $(MODULES_DIR)/*.c) $(wildcard $(UTILS_DIR)/*.c)
 OBJS := $(SRCS:$(CORE_DIR)/%.c=$(BUILD_DIR)/%.o)
 
-# Adiciona main.c ao TARGET (não é necessário incluir em OBJS)
-SRCS += main.c
-
 # Opções de compilação
 CC = gcc -g
 CFLAGS = -Wall -I$(CORE_DIR) -I$(MODULES_DIR) -I$(UTILS_DIR) # Inclua ambos os diretórios

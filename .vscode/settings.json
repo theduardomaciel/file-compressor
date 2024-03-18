@@ -13,6 +13,7 @@
         "cunit.h": "c",
         "basic.h": "c",
         "frequency_table.h": "c",
-        "cstddef": "c"
+        "cstddef": "c",
+        "main.h": "c"
     }
 }

@@ -46,10 +46,10 @@ void *stack_pop(stack *stack)
     return data;
 }
 
-stack *stack_copy(stack *stack)
+stack *stack_copy(stack *s)
 {
-    stack_node *new_stack = stack_init();
-    stack_node *current = stack->top;
+    stack *new_stack = stack_init();
+    stack_node *current = s->top;
 
     while (current != NULL)
     {
@@ -60,9 +60,9 @@ stack *stack_copy(stack *stack)
     return new_stack;
 }
 
-void stack_destroy(stack *stack)
+void stack_destroy(stack *s)
 {
-    stack_node *current = stack->top;
+    stack_node *current = s->top;
     stack_node *next;
 
     while (current != NULL)
@@ -72,5 +72,5 @@ void stack_destroy(stack *stack)
         current = next;
     }
 
-    free(stack);
+    free(s);
 }
