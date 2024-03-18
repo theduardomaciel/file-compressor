@@ -10,7 +10,7 @@
 
 ## 💻 Projeto
 
-...
+Um sistema que gera um arquivo de texto contendo números aleatórios e a quantidade de comparações necessárias para encontrá-los em uma lista encadeada e uma arvore binária de busca, bem como a geração de um gráfico contendo as informações de complexidade dessas estruturas.
 
 <br />
 
