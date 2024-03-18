@@ -6,7 +6,17 @@
 
 #include "huffman_tree.h"
 
+typedef struct
+{
+    huffman_node *tree;
+    huffman_node **current_node;
+    FILE *output_file;
+    uint8_t end_bit;
+} BitProcessingState;
+
 huffman_node *rebuild_huffman_tree(uint8_t **header_tree);
+
+void process_byte(uint8_t byte, BitProcessingState *state);
 
 void decompress(FILE *input, char *output_path)
 {
@@ -35,31 +45,19 @@ void decompress(FILE *input, char *output_path)
     huffman_node *current_node = tree;
     uint8_t current_byte;
 
+    BitProcessingState state = {
+        .current_node = &current_node,
+        .output_file = output_file,
+        .tree = tree,
+        .end_bit = 0};
+
     // Lemos os bytes do arquivo de entrada, exceto o último, que pode conter lixo
     for (uint64_t byte_index = 0; byte_index < bytes_to_read - 1; byte_index++)
     {
         fread(&current_byte, sizeof(uint8_t), 1, input);
 
-        // Para cada bit do byte lido, percorremos a árvore de Huffman
-        for (int j = 7; j >= 0; j--)
-        {
-            // Se o bit j do byte for 1, percorremos a árvore para a direita, caso contrário, percorremos para a esquerda
-            if (is_bit_i_set(current_byte, j))
-            {
-                current_node = current_node->right;
-            }
-            else
-            {
-                current_node = current_node->left;
-            }
-
-            // Se chegamos a uma folha, escrevemos o caractere no arquivo de saída e voltamos para a raiz da árvore
-            if (is_leaf(current_node))
-            {
-                fwrite(current_node->data, sizeof(uint8_t), 1, output_file);
-                current_node = tree;
-            }
-        }
+        process_byte(current_byte, &state);
+        // process_byte(current_byte, &(BitProcessingState){tree, &current_node, output_file, 0});
     }
 
     // Lemos o último byte do arquivo de entrada, até o tamanho do lixo, caso ele exista
@@ -67,25 +65,38 @@ void decompress(FILE *input, char *output_path)
     {
         fread(&current_byte, sizeof(uint8_t), 1, input);
 
-        for (int j = 7; j >= file_header->trash_size; j--)
-        {
-            if (is_bit_i_set(current_byte, j))
-            {
-                current_node = current_node->right;
-            }
-            else
-            {
-                current_node = current_node->left;
-            }
+        // Determinamos o número de bits a serem lidos do último byte
+        // Como o último byte pode conter lixo, não podemos ler todos os 8 bits
+        state.end_bit = file_header->trash_size;
 
-            if (is_leaf(current_node))
-            {
-                fwrite(current_node->data, sizeof(uint8_t), 1, output_file);
-                current_node = tree;
-            }
-        }
+        process_byte(current_byte, &state);
+        // process_byte(current_byte, &(BitProcessingState){tree, &current_node, output_file, file_header->trash_size});
     }
 
     // Fechamos os arquivos de saída
     fclose(output_file);
+}
+
+void process_byte(uint8_t byte, BitProcessingState *state)
+{
+    // Para cada bit do byte lido, percorremos a árvore de Huffman
+    for (int j = 7; j >= state->end_bit; j--)
+    {
+        // Se o bit j do byte for 1, percorremos a árvore para a direita, caso contrário, percorremos para a esquerda
+        if (is_bit_i_set(byte, j))
+        {
+            *(state->current_node) = (*(state->current_node))->right;
+        }
+        else
+        {
+            *(state->current_node) = (*(state->current_node))->left;
+        }
+
+        // Se chegarmos a uma folha, escrevemos o caractere no arquivo de saída e voltamos para a raiz da árvore
+        if (is_leaf(*(state->current_node)))
+        {
+            fwrite((*(state->current_node))->data, sizeof(uint8_t), 1, state->output_file);
+            *(state->current_node) = state->tree;
+        }
+    }
 }
