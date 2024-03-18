@@ -16,7 +16,9 @@ Um sistema que gera um arquivo de texto contendo números aleatórios e a quanti
 
 ## 🧠 Princípios
 
-1.  ...
+1.  Armazenar muitos dados em ambas as estruturas
+2.  Realizar o sorteio de um número e contar a quantidade de comparações nas estruturas
+3.  Os dados devem ser gerados e plotados na hora da apresentação
 
 <br />
 
