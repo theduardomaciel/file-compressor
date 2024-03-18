@@ -31,7 +31,7 @@ struct arvore *create_arvore(int valor){
     
     return newarvore;
 }
-
+//função recursiva para inserir um valor na arvore binária
 struct arvore *inserirArvore(struct arvore *arvore,int valor){
     if(arvore==NULL){
         return create_arvore(valor);
@@ -44,7 +44,7 @@ struct arvore *inserirArvore(struct arvore *arvore,int valor){
     return arvore;
     
 }
-
+//função para inserir valor na lista encadeada
 struct node *inserirLista(struct node *node,int valor){
     if(node==NULL){
         node = create_node(valor);
@@ -57,12 +57,12 @@ struct node *inserirLista(struct node *node,int valor){
     return node;
     
 }
-
+//função que retorna um número aleatório
 int giveRandom(int min, int max) { 
     int num = (rand() % (max - min + 1)) + min; 
     return num;
 } 
-
+//função que verifica se um número aleatório já foi sorteado
 int jaFoi(int array[],int random_num, int index_array_randoms){
     int i=0;
     while(i<=index_array_randoms){
@@ -73,7 +73,7 @@ int jaFoi(int array[],int random_num, int index_array_randoms){
     }
     return 0;
 }
-
+//função que verifica se um número aleatório já foi sorteado na matriz
 int jaFoiMatriz(int matriz[][3],int random_num, int index_matriz_search){
     int i=0;
     while(i<=index_matriz_search){
@@ -84,7 +84,7 @@ int jaFoiMatriz(int matriz[][3],int random_num, int index_matriz_search){
     }
     return 0;
 }
-
+//imprime a arvore binária em ordem
 void printArvoreEmOrdem(struct arvore *arvore) {
     if (arvore != NULL) {
         printArvoreEmOrdem(arvore->left);
@@ -92,7 +92,7 @@ void printArvoreEmOrdem(struct arvore *arvore) {
         printArvoreEmOrdem(arvore->right);
     }
 }
-
+//imprime a lista encadeada
 void printLista(struct node *node){
     struct node *aux = node;
     while(aux!=NULL){
@@ -100,7 +100,7 @@ void printLista(struct node *node){
         aux = aux->next;
     }
 }
-
+//imprime o array de números aleatórios
 void printRandoms(int array[],int index_array_randoms){
     int i=0;
     while(i<index_array_randoms){
@@ -108,7 +108,7 @@ void printRandoms(int array[],int index_array_randoms){
         i++;
     }
 }
-
+//função que busca um valor na lista encadeada e retorna a quantidade de comparações realizadas
 int buscaLista(struct node *node,int valor){
     struct node *aux = node;
     int comparacoes=0;
@@ -120,7 +120,7 @@ int buscaLista(struct node *node,int valor){
         aux = aux->next;
     }
 }
-
+//função recursiva que busca um valor na arvore binária e incrementa a quantidade de comparações realizadas
 int buscaArvore(struct arvore *arvore,int valor,int *comp_arvore){
     if(arvore==NULL){
         return -1;
@@ -139,7 +139,7 @@ int buscaArvore(struct arvore *arvore,int valor,int *comp_arvore){
         
     }
 }
-
+//imprime a matriz de inteiros
 void printMatriz(int matriz[][3],int index_matriz_search){
     int i=0;
     while(i<index_matriz_search){
@@ -147,7 +147,7 @@ void printMatriz(int matriz[][3],int index_matriz_search){
         i++;
     }
 }
-
+//função que insere os dados da matriz de inteiros para a matriz de strings
 void colocar(char matrizz[][20], int matriz[][3],int index_matriz_search, int *index_matriz_colocar){
     int i=0;
     while(i<index_matriz_search){
@@ -156,7 +156,7 @@ void colocar(char matrizz[][20], int matriz[][3],int index_matriz_search, int *i
         i++;
     }
 }
-
+//imprime a matriz de strings
 void printMatrizColocar(char matrizz[][20],int index_matriz_colocar){
     int i=0;
     while(i<index_matriz_colocar){
@@ -164,7 +164,7 @@ void printMatrizColocar(char matrizz[][20],int index_matriz_colocar){
         i++;
     }
 }
-
+//função recursiva que cria a arvore binária baseado no array dado e retorna essa arvore
 struct arvore* construirArvore(int array[], int inicio, int fim) {
     if (inicio > fim)
         return NULL;
@@ -182,10 +182,10 @@ struct arvore* construirArvore(int array[], int inicio, int fim) {
 int main()
 {
     struct node *lista_encadeada = NULL;
-    struct arvore *arvore_bi = NULL;
-    srand(time(0));
+    struct arvore *arvore_bi = NULL;      //inicialização das estruturas
+    srand(time(0)); //usando a função time(0) para gerar números aleatórios diferentes
     int quant_num=100001;
-    int *array_randoms = malloc(quant_num * sizeof(int));
+    int *array_randoms = malloc(quant_num * sizeof(int)); //alocação dinámica de memória do array para aumentar a capacidade
     if (array_randoms == NULL) {
         printf("Erro ao alocar memória.\n");
         return EXIT_FAILURE;
@@ -194,7 +194,7 @@ int main()
     int y=0;
     while(y<quant_num){
         
-        array_randoms[y]=y;
+        array_randoms[y]=y; //o array recebe os valores de 0 até 100.000
         y++;
     }
     printf("Array de Numeros randomizados:\n");
@@ -203,11 +203,11 @@ int main()
     
     y = y-1;
     while(y>=0){
-        lista_encadeada = inserirLista(lista_encadeada,array_randoms[y]);
+        lista_encadeada = inserirLista(lista_encadeada,array_randoms[y]); //insere os valores do array na lista encadeada de forma decrescente
         y--;
     }
     
-    arvore_bi = construirArvore(array_randoms,0,quant_num-1);
+    arvore_bi = construirArvore(array_randoms,0,quant_num-1); //constroi a arovre binária passando o array como parâmetro
     
     printf("Lista Encadeada:\n");
     //printLista(lista_encadeada);
@@ -217,41 +217,41 @@ int main()
     //printArvoreEmOrdem(auxarvore);
     printf("\n");
     
-    int quant_search = 50000;
+    int quant_search = 50000; //quantidade de números que serão buscados
     
-    int matriz[50000][3];
+    int matriz[50000][3]; //matriz que armazenará: número sorteado / comparações na lista / comparações na árvore
     int index_matriz_search = 0;
     
     while(quant_search>0){
         
-        int random_num = giveRandom(0,100000);
-        if(jaFoiMatriz(matriz,random_num,index_matriz_search)){
+        int random_num = giveRandom(0,100000); //gera um número aleatório entre 0 e 100.000
+        if(jaFoiMatriz(matriz,random_num,index_matriz_search)){ //verifica se esse número já foi sorteado anteriormente
             quant_search++;
         }else{
             int comp_arvore=0;
-            int comparacoesLista = buscaLista(lista_encadeada,random_num);
-            struct arvore *aux_arvore = arvore_bi;
+            int comparacoesLista = buscaLista(lista_encadeada,random_num);  
+            struct arvore *aux_arvore = arvore_bi;                           //cria inteiros que armazenarão a quantidade de comparações em cada estrutura
             buscaArvore(aux_arvore,random_num,&comp_arvore);
             int comparacoesArvore=comp_arvore;
             matriz[index_matriz_search][0]=random_num;
-            matriz[index_matriz_search][1]=comparacoesLista;
+            matriz[index_matriz_search][1]=comparacoesLista;     //passa o número aleatório gerado e a quantidade de comparações nas estruturas para a matriz
             matriz[index_matriz_search][2]=comparacoesArvore;
             index_matriz_search++;
         }
         quant_search--;
     }
     
-    free(array_randoms);
-    char matrizz[50000][20];
+    free(array_randoms); 
+    char matrizz[50000][20];  //matriz de strings que receberá a matriz de inteiros para colocar no .txt
     int index_matriz_colocar=0;
     
-    colocar(matrizz,matriz,index_matriz_search,&index_matriz_colocar);
+    colocar(matrizz,matriz,index_matriz_search,&index_matriz_colocar); //a matriz de strings recebe os valores da matriz de inteiros
     //printf("\n\n\n");
     //printMatrizColocar(matrizz,index_matriz_colocar);
     printf("\n\n\n");
 
     FILE *fPtr;
-    fPtr = fopen("data/file1.txt", "w");
+    fPtr = fopen("data/file1.txt", "w"); //cria o arquivo de texto file1.txt no caminho especificado
     
     if(fPtr == NULL)
     {
@@ -260,7 +260,7 @@ int main()
     }
     
     int i=0;
-    while(i<index_matriz_search){
+    while(i<index_matriz_search){ //loop que adiciona cada lacuna da matriz no .txt
         fputs(matrizz[i], fPtr);
         fputs("\n", fPtr);
         i++;
