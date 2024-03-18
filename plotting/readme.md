@@ -29,6 +29,7 @@ Um sistema que gera um arquivo de texto contendo números aleatórios e a quanti
 - [x] Contar a quantidade de comparações em cada número sorteado
 - [x] Colocar esses dados obtidos em um .txt
 - [x] Aumentar consideravelmente o tamanho das estruturas
+- [x] Gerar um gráfico mostrando a complexidade das estruturas
 
 <br />
 
