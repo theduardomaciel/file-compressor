@@ -34,7 +34,7 @@
 
 ## 🗒️ Documentação
 Os módulos com maior complexidade de compressão e implementação receberam documentações próprias a fim de facilitar o entendimento do respectivo conteúdo.
-Essa documentação [pode ser encontrada aqui](https://github.com/theduardomaciel/projeto-ed/docs)
+Essa documentação [pode ser encontrada aqui](https://github.com/theduardomaciel/projeto-ed/wiki)
 
 <br />
 
