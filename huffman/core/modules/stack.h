@@ -10,7 +10,7 @@
 typedef struct stack_node
 {
     void *data;
-    struct stack_node *next;
+    struct stack_node *next; // Utilizamos uma lista encadeada para implementar a pilha
 } stack_node;
 
 typedef struct stack

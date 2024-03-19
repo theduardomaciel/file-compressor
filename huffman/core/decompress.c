@@ -1,11 +1,5 @@
 #include "main.h"
 
-#include "file_io.h"
-#include "header.h"
-#include "utils.h"
-
-#include "huffman_tree.h"
-
 typedef struct
 {
     huffman_node *tree;

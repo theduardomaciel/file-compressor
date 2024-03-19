@@ -60,6 +60,36 @@ int ht_get_tree_size(huffman_node *root)
     return size;
 }
 
+// A fim de evitar o uso da pilha, poderíamos utilizar uma abordagem recursiva para percorrer a árvore, que,
+// como indicado pelo professor, seria bem menor e mais legível.
+// No entanto, durante o desenvolvimento do código pensamos que a abordagem iterativa seria mais eficiente (ô burrice minha pai amado)
+
+// Além disso, pensando em "impressionar" com uma função bem generalizada, optamos por utilizar uma função de callback,
+// ao invés de diretamente escrever os bytes no arquivo, o que pode causar certa confusão se o código não for bem documentado
+// Em resumo, a ideia da implementação atual era poder realizar mais de um tipo de atividade com a essa função, ou seja,
+// seria possível tanto printar um novo byte na tela quanto escrevê-lo em um arquivo (o nosso uso), por exemplo
+
+// A versão recursiva, sem a bagunça lá do callback, pareceria assim mais ou menos:
+/*
+    if (root != NULL)
+    {
+        if (is_leaf(current_node) && is_scaped_char(current_node))
+        {
+            char *scaped_char = malloc(sizeof(char));
+            *scaped_char = '\\';
+            fwrite(scape_char, sizeof(uint8_t), 1, output);
+        }
+
+        fwrite((uint8_t *)root->byte, sizeof(uint8_t), 1, output);
+
+        ht_pre_order(root->left, output);
+        ht_pre_order(root->right, output);
+    }
+*/
+
+// Também atualizamos a função de escrita dos caracteres de escape (para distinguir nós internos de folhas), para torna mais
+// claro o que está acontecendo (um char '\' é escrito antes do '*')
+
 void ht_pre_order(huffman_node *root, void (*callback)(void *data, void *arg), void *arg)
 {
     stack *stack = stack_init();
@@ -77,7 +107,9 @@ void ht_pre_order(huffman_node *root, void (*callback)(void *data, void *arg), v
             // pois a função callback espera um ponteiro genérico (void *) como argumento.
             // Dessa forma, o operador '&' é usado para obter o endereço de memória onde o caractere
             // está armazenado, permitindo que seja passado corretamente para a função callback.
-            callback(&(char){'\\'}, arg);
+            char *scaped_char = malloc(sizeof(char));
+            *scaped_char = '\\';
+            callback(scaped_char, arg);
         }
 
         // Caso não, podemos chamar o callback com o caractere normal
@@ -146,6 +178,12 @@ huffman_node *build_huffman_tree(priority_queue *queue)
 
 // Nós internos sempre serão representados por um *, no entanto, para diferenciá-lo de uma folha, precisamos 'escapar' o caractere
 // Para isso, utilizamos o caractere '\' antes do '*', indicando que o próximo caractere representa uma folha
+
+// Acabei utilizando um ponteiro duplo para que possamos avançar para o próximo caractere do cabeçalho sem precisar de outros parâmetros
+// Poderíamos utilizar um ponteiro simples, mas isso exigiria um argumento adicional para armazenar o índice atual do cabeçalho
+// Ficaria mais ou menos assim: uint8_t rebuild_huffman_tree(uint8_t *header_tree, int *index)
+// Dessa forma, o índice seria incrementado dentro da função e o próximo caractere do cabeçalho seria retornado
+
 huffman_node *rebuild_huffman_tree(uint8_t **header_tree)
 {
     // Alocamos espaço para armazenar o símbolo atual da árvore

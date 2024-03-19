@@ -263,7 +263,7 @@ int main()
     struct node *lista_encadeada = NULL;
     struct arvore *arvore_bi = NULL; // inicialização das estruturas
     srand(time(0));                  // usando a função time(0) para gerar números aleatórios diferentes
-    int quant_num = 101;
+    int quant_num = 2001;
     int *array_randoms = malloc(quant_num * sizeof(int)); // alocação dinámica de memória do array para aumentar a capacidade
     if (array_randoms == NULL)
     {
@@ -299,7 +299,7 @@ int main()
     // printArvoreEmOrdem(auxarvore);
     printf("\n");
 
-    int quant_search = 100, matriz_size = 100; // quantidade de números que serão buscados
+    int quant_search = 2000, matriz_size = 2000; // quantidade de números que serão buscados
 
     int matriz[matriz_size][3]; // matriz que armazenará: número sorteado / comparações na lista / comparações na árvore
     int index_matriz_search = 0;

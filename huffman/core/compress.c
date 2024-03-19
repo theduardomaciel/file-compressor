@@ -1,12 +1,7 @@
 #include "main.h"
 
-#include "file_io.h"
-#include "header.h"
-#include "utils.h"
-
 #include "frequency_table.h"
 #include "priority_queue.h"
-#include "huffman_tree.h"
 
 void DEBUG_tree(huffman_node *tree);
 
@@ -91,6 +86,9 @@ void compress(FILE *input, char *output_path)
     header_data *header = malloc(sizeof(header_data));
 
     header->tree_size = ht_get_tree_size(tree);
+
+    // Obtemos o tamanho do lixo obtendo a posição do último bit escrito no arquivo (somamos 1 para isso)
+    // e realizando o bit shift para esquerda de 13, equivalente à quantidade de bits ocupada pelo tamanho da árvore
     header->trash_size = (current_byte_index + 1) << 13;
 
     printf("🌳 Tamanho da árvore: %d\n", header->tree_size);

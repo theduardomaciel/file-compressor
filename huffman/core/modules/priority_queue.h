@@ -12,9 +12,9 @@
 // Estrutura para a fila de prioridade
 typedef struct
 {
-    size_t size;
-    size_t capacity;
-    void **data;
+    size_t size;     // Número de elementos na fila de prioridade
+    size_t capacity; // Capacidade máxima da fila de prioridade (no caso do algoritmo de Huffman, 256)
+    void **data;     // Um array de ponteiros para os dados (heap)
     int (*comparator)(const void *d1, const void *d2);
 } priority_queue;
 
@@ -32,16 +32,6 @@ typedef struct
  * @return Um ponteiro para a estrutura de Fila de Prioridade alocada, ou NULL se ocorrer um erro na alocação de memória.
  */
 priority_queue *pq_init(int capacity, int (*comparator)(const void *d1, const void *d2));
-
-/**
- * @brief Função responsável por destruir uma fila de prioridade.
- *
- * Esta função libera a memória alocada para a fila de prioridade especificada.
- * Cuidado: os dados armazenados na fila de prioridade não são liberados.
- *
- * @param pq A fila de prioridade a ser destruída.
- */
-void pq_destroy(priority_queue *pq);
 
 /**
  * @brief Insere um elemento na fila de prioridade.
@@ -62,5 +52,15 @@ void pq_enqueue(priority_queue *pq, const void *data);
  * @return O elemento de maior prioridade removido da fila.
  */
 void *pq_dequeue(priority_queue *pq);
+
+/**
+ * @brief Função responsável por destruir uma fila de prioridade.
+ *
+ * Esta função libera a memória alocada para a fila de prioridade especificada.
+ * Cuidado: os dados armazenados na fila de prioridade não são liberados.
+ *
+ * @param pq A fila de prioridade a ser destruída.
+ */
+void pq_destroy(priority_queue *pq);
 
 #endif // PRIORITY_QUEUE_H

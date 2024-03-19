@@ -79,6 +79,8 @@ make clean
 
 Devido a problemas com a importação e compilação dos arquivos por meio do arquivo Makefile, incluímos os testes das estruturas utilizadas no algoritmo de Huffman no seguinte repositório: https://github.com/theduardomaciel/huffman-test-suite
 
+<br />
+
 ## 🚧 Roadmap
 
 - [x] Desenvolver os módulos de `stack`, `priority_queue` e `huffman_tree` para utilização nos processos de compressão e descompressão
