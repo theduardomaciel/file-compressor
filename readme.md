@@ -11,7 +11,7 @@
 ## 📦 Módulos
 
 1.  Apresentar um **seminário** acerca de **Árvores Red-Black**
-2.  **Codificação de Huffman**
+2.  **Codificação de Huffman** (e casos de testes unitários)
 3.  **Contagem e plotagem** de comparações entre **Lista x Árvore de Busca Binária**
 
 > Para melhor organização entre os módulos, sugere-se que os códigos estejam escritos em padrão `snake_case`
@@ -28,7 +28,13 @@
 - [x] Implementar algoritmo de Huffman para compressão de arquivos
 - [x] Pesquisar e criar seminário sobre Árvore Rubro-negra (Red-black)
 - [x] Desenvolver plotagem e comparação entre Lista x Árvore de Busca Binária
-- [ ] Unificar módulos do projeto neste repositório único
+- [x] Unificar módulos do projeto neste repositório único
+
+<br />
+
+## 🗒️ Documentação
+Os módulos com maior complexidade de compressão e implementação receberam documentações próprias a fim de facilitar o entendimento do respectivo conteúdo.
+Essa documentação [pode ser encontrada aqui](https://github.com/theduardomaciel/projeto-ed/wiki)
 
 <br />
 
