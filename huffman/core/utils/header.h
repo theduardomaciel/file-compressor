@@ -21,14 +21,6 @@ typedef struct header_data
 void header_init(FILE *file);
 
 /**
- * @brief Função de callback para escrever a árvore no cabeçalho.
- *
- * @param data Os dados a serem escritos.
- * @param arg O argumento adicional (opcional).
- */
-void write_tree_callback(void *data, void *arg);
-
-/**
  * @brief Escreve o cabeçalho no arquivo.
  *
  * @param file O arquivo onde o cabeçalho será escrito.

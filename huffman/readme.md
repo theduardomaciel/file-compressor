@@ -43,7 +43,7 @@ Durante o desenvolvimento com o Visual Studio Code (VSCode), para que o processo
 Quando necessário executar a aplicação, utilize no terminal:
 
 ```
-make run INPUT=<nome do arquivo com extensão>
+make run FILE=<nome do arquivo com extensão>
 ```
 
 > Caso seja de interesse **somente** compilar o código, sem executá-lo logo em seguida, utilize somente `make`

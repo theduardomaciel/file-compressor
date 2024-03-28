@@ -38,7 +38,7 @@ void compress(FILE *input, char *output_path)
     header_init(output_file);
 
     // Header - passo 2. Escrevemos a árvore de Huffman após os 2 bytes reservados para o tamanho do lixo e da árvore
-    ht_pre_order(tree, write_tree_callback, output_file);
+    ht_pre_order(tree, output_file);
 
     // Realizamos a escrita dos novos bytes comprimidos no arquivo de saída
     uint8_t current_byte;

@@ -90,12 +90,12 @@ int ht_get_tree_size(huffman_node *root)
 // Também atualizamos a função de escrita dos caracteres de escape (para distinguir nós internos de folhas), para torna mais
 // claro o que está acontecendo (um char '\' é escrito antes do '*')
 
-void ht_pre_order(huffman_node *root, void (*callback)(void *data, void *arg), void *arg)
+void ht_pre_order(huffman_node *root, FILE *output_file)
 {
     stack *stack = stack_init();
     stack_push(stack, root);
 
-    while (stack->size != 0)
+    while (!is_stack_empty(stack))
     {
         huffman_node *current_node = (huffman_node *)stack_pop(stack);
 
@@ -109,11 +109,11 @@ void ht_pre_order(huffman_node *root, void (*callback)(void *data, void *arg), v
             // está armazenado, permitindo que seja passado corretamente para a função callback.
             char *scaped_char = malloc(sizeof(char));
             *scaped_char = '\\';
-            callback(scaped_char, arg);
+            fwrite(scaped_char, sizeof(uint8_t), 1, output_file);
         }
 
         // Caso não, podemos chamar o callback com o caractere normal
-        callback(current_node->data, arg);
+        fwrite(current_node->data, sizeof(uint8_t), 1, output_file);
 
         // Empilhar os ramos direito e esquerdo, se existirem
         if (current_node->right != NULL)

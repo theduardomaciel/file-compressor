@@ -1,27 +1,34 @@
 #include "header.h"
 
+/*
+    De acordo com as especificações do projeto:
+
+    BYTE 1 e 2:
+    Os 3 primeiros bits são reservados para o tamanho do lixo
+    -   O tamanho do lixo é um valor entre 0 e 7, que indica quantos bits do último byte do arquivo compactado não são relevantes
+
+    Os 13 bits restantes são reservados para o armazenamento da árvore de Huffman
+    -   A árvore de Huffman é armazenada em pré-ordem
+
+    BYTE 3 (após a árvore em pré-ordem):
+    Os 3 primeiros bits são reservados para o tamanho do nome da extensão do arquivo original
+    -   O maior valor possível para o tamanho do nome da extensão é 6, isto é, 110 em binário
+    -   Caso o tamanho seja maior que 6, avisamos ao usuário que não é possível comprimir o arquivo
+
+    Os outros 5 bits são lixo.
+
+    BYTES SEGUINTES (máximo de 6 bytes):
+    -   Devem ser usados para armazenar a extensão do arquivo original
+
+    BYTES SEGUINTES (a partir do byte após a extensão):
+    Os n bits seguintes são reservados para o armazenamento dos bytes comprimidos pelo algoritmo de Huffman
+    -   Esses bytes são descobertos por meio da iteração do dicionário formado a partir da árvore de Huffman
+*/
+
 void header_init(FILE *file)
 {
-    /*
-        De acordo com as especificações do projeto:
-
-        Os 3 primeiros bits são reservados para o tamanho do lixo
-        -   O tamanho do lixo é um valor entre 0 e 7, que indica quantos bits do último byte do arquivo compactado são lixo
-
-        Os 13 bits restantes são reservados para o armazenamento da árvore de Huffman
-        -   A árvore de Huffman é armazenada em pré-ordem
-
-        Os n bits seguintes são reservados para o armazenamento dos bytes comprimidos pelo algoritmo de Huffman
-        -   Esses bytes são descobertos por meio da iteração do dicionário formado a partir da árvore de Huffman
-    */
     uint16_t header = 0;
     fwrite(&header, sizeof(uint16_t), 1, file);
-}
-
-void write_tree_callback(void *data, void *arg)
-{
-    FILE *output_file = (FILE *)arg;
-    fwrite(data, sizeof(uint8_t), 1, output_file);
 }
 
 void header_write(FILE *file, header_data *data)

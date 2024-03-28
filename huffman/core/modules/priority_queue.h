@@ -14,7 +14,7 @@ typedef struct
 {
     size_t size;     // Número de elementos na fila de prioridade
     size_t capacity; // Capacidade máxima da fila de prioridade (no caso do algoritmo de Huffman, 256)
-    void **data;     // Um array de dados de tipo genérico (void*) numa estrutura de heap
+    void **data;     // Um array de dados de qualquer tipo (void*) numa estrutura de heap
     int (*comparator)(const void *d1, const void *d2);
 } priority_queue;
 

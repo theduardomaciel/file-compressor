@@ -39,9 +39,6 @@ priority_queue *build_frequency_queue(uint64_t *frequency_table);
  * @param bytes_dictionary Um ponteiro para o dicionário de bytes a ser construído.
  * @param path O caminho atual na árvore de Huffman.
  */
-void build_bytes_dictionary(huffman_node *root, stack **bytes_dictionary, stack *path);
-
-// Obs.: No futuro, buscar transformar a função acima em uma função que retorna um ponteiro para um dicionário de bytes
-// Atualmente não é possível pois nenhuma sugestão de solução que não utilize recursão foi encontrada
+void build_bytes_dictionary(huffman_node *root, stack *bytes_dictionary[MAX_SIZE], stack *path);
 
 #endif // FREQUENCY_TABLE_H

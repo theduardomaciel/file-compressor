@@ -7,16 +7,16 @@
 #ifndef STACK_H
 #define STACK_H
 
+// Para que a pilha tenha um tamanho dinâmico, utilizamos uma lista encadeada
 typedef struct stack_node
 {
     void *data;
-    struct stack_node *next; // Utilizamos uma lista encadeada para implementar a pilha
+    struct stack_node *next;
 } stack_node;
 
 typedef struct stack
 {
     stack_node *top;
-    uint64_t size;
 } stack;
 
 /**
@@ -25,6 +25,14 @@ typedef struct stack
  * @return Um ponteiro para a pilha inicializada.
  */
 stack *stack_init();
+
+/**
+ * @brief Verifica se a pilha está vazia.
+ *
+ * @param s A pilha a ser verificada.
+ * @return 1 se a pilha estiver vazia, 0 caso contrário.
+ */
+int is_stack_empty(stack *s);
 
 /**
  * @brief Empurra um elemento para o topo da pilha.

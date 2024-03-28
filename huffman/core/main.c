@@ -5,7 +5,7 @@
 
 void print_usage()
 {
-    printf("Uso: make run INPUT=<nome do arquivo com extensão>\n");
+    printf("Uso: make run FILE=<nome do arquivo com extensão>\n");
 }
 
 /**
@@ -20,11 +20,11 @@ void print_usage()
  */
 int main(int argc, char *argv[])
 {
-    /* printf("%d\n", argc);
+    printf("%d\n", argc);
     for (int i = 0; i < argc; i++)
     {
         printf("[%d] %s\n", i, argv[i]);
-    } */
+    }
 
     // Verificamos se o usuário passou os argumentos corretamente
     // Caso não, exibimos a mensagem de modo de uso e encerramos o programa

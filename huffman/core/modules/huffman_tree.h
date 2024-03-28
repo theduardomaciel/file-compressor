@@ -64,10 +64,9 @@ int ht_get_tree_size(huffman_node *root);
  * @brief Percorre a árvore de Huffman em pré-ordem, chamando a função de retorno fornecida para cada nó visitado.
  *
  * @param root A raiz da árvore de Huffman.
- * @param callback A função de retorno a ser chamada para cada nó visitado.
- * @param arg Um argumento adicional a ser passado para a função de retorno.
+ * @param output_file O arquivo de saída em que a árvore em pré-ordem será escrita.
  */
-void ht_pre_order(huffman_node *root, void (*callback)(void *data, void *arg), void *arg);
+void ht_pre_order(huffman_node *root, FILE *output_file);
 
 /**
  * @brief Libera a memória alocada para a árvore de Huffman.

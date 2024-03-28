@@ -38,7 +38,7 @@ $(BUILD_DIR):
 
 # Alvo para executar o programa após a compilação
 run: all
-	./$(TARGET) $(INPUT)
+	./$(TARGET) $(FILE)
 
 # Limpamos arquivos de compilação e o executável
 clean:

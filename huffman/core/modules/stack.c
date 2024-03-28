@@ -11,9 +11,13 @@ stack *stack_init()
     NULL_POINTER_CHECK(new_stack);
 
     new_stack->top = NULL;
-    new_stack->size = 0;
 
-    return (new_stack);
+    return new_stack;
+}
+
+int is_stack_empty(stack *stack)
+{
+    return stack->top == NULL;
 }
 
 void stack_push(stack *stack, void *data)
@@ -25,7 +29,6 @@ void stack_push(stack *stack, void *data)
     new_node->next = stack->top;
 
     stack->top = new_node;
-    stack->size++;
 }
 
 void *stack_pop(stack *stack)
@@ -35,15 +38,13 @@ void *stack_pop(stack *stack)
         return NULL;
     }
 
-    stack_node *node = stack->top;
-    void *data = node->data;
+    stack_node *temp_node = stack->top;
+    void *popped_data = temp_node->data;
 
-    stack->top = node->next;
-    stack->size--;
+    stack->top = temp_node->next;
 
-    free(node);
-
-    return data;
+    free(temp_node);
+    return popped_data;
 }
 
 stack *stack_copy(stack *s)
@@ -62,15 +63,8 @@ stack *stack_copy(stack *s)
 
 void stack_destroy(stack *s)
 {
-    stack_node *current = s->top;
-    stack_node *next;
-
-    while (current != NULL)
+    while (!is_stack_empty(s))
     {
-        next = current->next;
-        free(current);
-        current = next;
+        stack_pop(s);
     }
-
-    free(s);
 }
