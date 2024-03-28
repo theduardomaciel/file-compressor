@@ -33,32 +33,6 @@ uint64_t *build_frequency_table(FILE *input)
     return frequency_table;
 }
 
-/**
- * Função de comparação utilizada para ordenar os elementos em uma tabela de frequência.
- *
- * @param d1 O primeiro elemento a ser comparado.
- * @param d2 O segundo elemento a ser comparado.
- * @return Um valor negativo se d1 for maior que d2 e um valor positivo se d1 for menor ou igual a d2.
- */
-int compare(const void *d1, const void *d2)
-{
-    huffman_node *n1 = (huffman_node *)d1;
-    huffman_node *n2 = (huffman_node *)d2;
-
-    if (n1->frequency == n2->frequency)
-    {
-        return 1; // não pode ser 0 pois causa ambiguidade
-    }
-    else if (n1->frequency > n2->frequency) // cuidado com esse sinal! não inverta!
-    {
-        return -1;
-    }
-    else
-    {
-        return 1;
-    }
-}
-
 priority_queue *build_frequency_queue(uint64_t *frequency_table)
 {
     NULL_POINTER_CHECK(frequency_table);

@@ -14,9 +14,15 @@ typedef struct
 {
     size_t size;     // Número de elementos na fila de prioridade
     size_t capacity; // Capacidade máxima da fila de prioridade (no caso do algoritmo de Huffman, 256)
-    void **data;     // Um array de ponteiros para os dados (heap)
+    void **data;     // Um array de dados de tipo genérico (void*) numa estrutura de heap
     int (*comparator)(const void *d1, const void *d2);
 } priority_queue;
+
+/*
+    O comparador é uma função que compara dois elementos e retorna um valor inteiro que indica a precedência entre eles.
+    Utilizamos um comparador pois os módulos de priority_queue e huffman_tree não podem depender um do outro.
+    Além disso, por ser genérica, esta implementação da fila de prioridade pode ser reutilizada em outros módulos.
+*/
 
 /**
  * Aloca memória para uma nova estrutura de Fila de Prioridade.
