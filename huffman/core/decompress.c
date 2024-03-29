@@ -8,8 +8,6 @@ typedef struct
     uint8_t end_bit;
 } BitProcessingState;
 
-huffman_node *rebuild_huffman_tree(uint8_t **header_tree);
-
 void process_byte(uint8_t byte, BitProcessingState *state);
 
 void decompress(FILE *input, char *output_path)

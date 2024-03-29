@@ -102,6 +102,4 @@ void print_tree_visually(huffman_node *node, int level, char direction);
 
 void print_pre_order(huffman_node *root);
 
-void print_dictionary(stack *bytes_dictionary[MAX_SIZE]);
-
 #endif // HUFFMAN_TREE_H

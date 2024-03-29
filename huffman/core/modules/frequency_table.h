@@ -3,8 +3,8 @@
 #include <string.h>
 #include <stdint.h>
 
+#include "hash_table.h"
 #include "huffman_tree.h"
-#include "priority_queue.h"
 
 #include "utils.h"
 
@@ -39,6 +39,6 @@ priority_queue *build_frequency_queue(uint64_t *frequency_table);
  * @param bytes_dictionary Um ponteiro para o dicionário de bytes a ser construído.
  * @param path O caminho atual na árvore de Huffman.
  */
-void build_bytes_dictionary(huffman_node *root, stack *bytes_dictionary[MAX_SIZE], stack *path);
+void build_bytes_dictionary(huffman_node *current_node, hash_table *table, uint8_t code[MAX_SIZE], size_t code_length);
 
 #endif // FREQUENCY_TABLE_H

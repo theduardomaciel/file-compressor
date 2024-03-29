@@ -1,11 +1,23 @@
 #include "main.h"
 
-#include "frequency_table.h"
+#include "hash_table.h"
 #include "priority_queue.h"
+#include "frequency_table.h"
 
 void DEBUG_tree(huffman_node *tree);
 
-void DEBUG_dictionary(stack *dictionary[MAX_SIZE]);
+void print_byte_compressed_pairs(hash_table *table)
+{
+    printf("Byte Original\tByte Comprimido\n");
+    printf("---------------------------------\n");
+    for (int i = 0; i < MAX_SIZE; i++)
+    {
+        if (table->entries[i].original_byte != 0 || table->entries[i].compressed_byte != 0)
+        {
+            printf("%i\t\t%u\n", i, table->entries[i].compressed_byte);
+        }
+    }
+}
 
 void compress(FILE *input, char *output_path)
 {
@@ -17,17 +29,18 @@ void compress(FILE *input, char *output_path)
 
     // Construímos a árvore de Huffman com base na fila de prioridade
     huffman_node *tree = build_huffman_tree(frequency_queue);
-    // print_pre_order(tree);
     //  DEBUG_tree(tree);
 
     // Construímos o dicionário que armazena os bytes comprimidos em seus respectivos bytes originais
-    stack *current_path = stack_init();
-    stack **bytes_dictionary = malloc(MAX_SIZE * sizeof(stack *));
-    memset(bytes_dictionary, 0, MAX_SIZE * sizeof(stack *));
+    hash_table *bytes_dictionary = hash_table_init();
 
-    build_bytes_dictionary(tree, bytes_dictionary, current_path);
-    free(current_path);
-    // DEBUG_dictionary(bytes_dictionary);
+    // Construímos o dicionário de bytes com base na árvore de Huffman
+    uint8_t *code = malloc(sizeof(uint8_t) * MAX_SIZE);
+    build_bytes_dictionary(tree, bytes_dictionary, code, 0);
+
+    print_byte_compressed_pairs(bytes_dictionary);
+
+    free(code);
 
     // Criamos o arquivo de saída agora, a fim de evitar o gasto de recursos caso nos deparemos com algum erro durante a compressão
     FILE *output_file = open_file(output_path, "wb");
@@ -47,33 +60,46 @@ void compress(FILE *input, char *output_path)
     // Para isso, criamos uma variável que armazena o byte que será escrito no arquivo enquanto percorremos o dicionário
     uint8_t new_byte = 0;
 
-    // Cada byte do arquivo
     while (fread(&current_byte, sizeof(uint8_t), 1, input) == 1)
     {
-        stack_node *current = bytes_dictionary[current_byte]->top;
-
-        // Cada bit (8 bits) do arquivo
-        while (current != NULL)
+        printf("current byte: %u\n", current_byte);
+        printf("teste: %u\n", hash_table_get(bytes_dictionary, current_byte));
+        // Itera por cada bit do byte utilizando operações bit a bit
+        for (int i = 7; i >= 0; i--)
         {
-            // Como o novo byte é inicializado com 0, somente nos preocupamos em setar os bits 1s
-            if (*(uint8_t *)current->data == 1)
-            {
-                new_byte = set_bit(new_byte, current_byte_index);
-            }
-
-            // Caso cheguemos ao final do byte, escrevemos o byte no arquivo e, em seguida,
-            // re-setamos a variável que armazena o novo byte e o índice atual para repetir o processo com o próximo byte
-            if (--current_byte_index < 0)
-            {
-                fwrite(&new_byte, sizeof(uint8_t), 1, output_file);
-
-                new_byte = 0;
-                current_byte_index = 7;
-            }
-
-            current = current->next;
+            uint8_t bit_value = (hash_table_get(bytes_dictionary, current_byte) >> i) & 0x01;
+            printf("%u", bit_value); // Exemplo de operação com o bit (impressão para demonstração)
         }
+        printf("\n");
     }
+
+    // Cada byte do arquivo
+    /*  while (fread(&current_byte, sizeof(uint8_t), 1, input) == 1)
+     {
+         stack_node *current = bytes_dictionary[current_byte]->top;
+
+         // Cada bit (8 bits) do arquivo
+         while (current != NULL)
+         {
+             // Como o novo byte é inicializado com 0, somente nos preocupamos em setar os bits 1s
+             if (*(uint8_t *)current->data == 1)
+             {
+                 new_byte = set_bit(new_byte, current_byte_index);
+             }
+
+             // Caso cheguemos ao final do byte, escrevemos o byte no arquivo e, em seguida,
+             // re-setamos a variável que armazena o novo byte e o índice atual para repetir o processo com o próximo byte
+             if (--current_byte_index < 0)
+             {
+                 fwrite(&new_byte, sizeof(uint8_t), 1, output_file);
+
+                 new_byte = 0;
+                 current_byte_index = 7;
+             }
+
+             current = current->next;
+         }
+     } */
 
     // Checamos se a quantidade de bits do último byte é menor que 8
     // Se for, temos lixo e precisamos escrever o último byte no arquivo
@@ -106,20 +132,3 @@ void DEBUG_tree(huffman_node *tree)
     print_pre_order(tree);
     print_tree_visually(tree, 0, '-');
 }
-
-void DEBUG_dictionary(stack *dictionary[MAX_SIZE])
-{
-    printf("Dicionário de bytes:\n");
-    print_dictionary(dictionary);
-}
-
-/*
-    // Cálculo do número total de bits necessários para representar os nós internos da árvore
-    int num_bits_tree = (1 << (huffman_tree_height + 1)) - 1; // Fórmula para uma árvore binária completa
-
-    // Cálculo do número total de bits na árvore (incluindo folhas)
-    int num_bits_total = num_bits_tree + num_folhas;
-
-    // Cálculo do número de bits de lixo
-    int num_bits_trash = 8 - (num_bits_total % 8);
-*/

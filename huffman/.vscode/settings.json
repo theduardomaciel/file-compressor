@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        ".env.*": "dotenv",
+        "*.css": "css",
+        ".env.example": "properties",
+        "priority_queue.h": "c",
+        "frequency_table.h": "c",
+        "__node_handle": "c"
+    },
+    "cSpell.words": [
+        "huffman"
+    ]
+}

@@ -10,6 +10,9 @@
     Os 13 bits restantes são reservados para o armazenamento da árvore de Huffman
     -   A árvore de Huffman é armazenada em pré-ordem
 
+    N BYTES:
+    O tamanho da árvore de Huffman é variável, então o número de bytes necessários para armazená-la também é variável
+
     BYTE 3 (após a árvore em pré-ordem):
     Os 3 primeiros bits são reservados para o tamanho do nome da extensão do arquivo original
     -   O maior valor possível para o tamanho do nome da extensão é 6, isto é, 110 em binário

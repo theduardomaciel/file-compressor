@@ -86,41 +86,33 @@ priority_queue *build_frequency_queue(uint64_t *frequency_table)
     return queue;
 }
 
-// Como as pilhas/listas encadeadas são structs declaradas com ponteiros, precisamos passar um array de ponteiros para pilhas
-// O índice do array corresponde ao byte que a pilha representa
-// Exemplo: bytes_dictionary[0] é a pilha que representa o byte 0
-
-// Considere o path como uma string de bits, onde 0 representa a esquerda e 1 a direita
-void build_bytes_dictionary(huffman_node *root, stack *bytes_dictionary[MAX_SIZE], stack *current_path)
+void build_bytes_dictionary(huffman_node *current_node, hash_table *table, uint8_t code[MAX_SIZE], size_t code_length)
 {
-    if (root != NULL)
+    if (current_node != NULL)
     {
-        // Se tivermos chegado a uma folha, copiamos o caminho até ela para o dicionário
-        if (is_leaf(root))
+        // Se chegamos a uma folha, adicionamos o caminho atual ao dicionário de bytes
+        if (is_leaf(current_node))
         {
-            stack *new_path = stack_copy(current_path);
-            bytes_dictionary[*(uint8_t *)root->data] = new_path; // utilizamos o byte correspondente ao nó como índice no dicionário
+            // Criamos uma cópia do código para evitar que ele seja alterado
+            uint8_t *byte_code = malloc(sizeof(uint8_t) * code_length);
+            NULL_POINTER_CHECK(byte_code);
+
+            // memcpy(byte_code, code, code_length);
+            for (size_t i = 0; i < code_length; i++)
+            {
+                byte_code[i] = code[i];
+            }
+
+            // Inserimos o byte original e seu código no dicionário
+            hash_table_insert(table, *(uint8_t *)current_node->data, byte_code);
         }
-        else
-        {
-            // Se não tivermos chegado a uma folha, precisamos continuar a percorrer a árvore
 
-            // Primeiro, empurramos um novo bit para o byte atual. Se estiver percorrendo a esquerda, empurramos 0, caso contrário, 1
-            // Em seguida, chamamos a função recursivamente para o ramo da árvore, o que repete o processo até encontrar uma folha
-            // Depois de explorar o ramo completamente, desempilhamos o bit adicionado
-            // Isso nos permite voltar um nível na árvore e explorar o outro ramo
+        // Percorrer o lado esquerdo da árvore com 0 adicionado ao código
+        code[code_length] = 0;
+        build_bytes_dictionary(current_node->left, table, code, code_length + 1);
 
-            stack_push(current_path, malloc(sizeof(uint8_t)));
-            *(uint8_t *)current_path->top->data = 0;
-
-            build_bytes_dictionary(root->left, bytes_dictionary, current_path);
-            stack_pop(current_path);
-
-            stack_push(current_path, malloc(sizeof(uint8_t)));
-            *(uint8_t *)current_path->top->data = 1;
-
-            build_bytes_dictionary(root->right, bytes_dictionary, current_path);
-            stack_pop(current_path);
-        }
+        // Percorrer o lado direito da árvore com 1 adicionado ao código
+        code[code_length] = 1;
+        build_bytes_dictionary(current_node->right, table, code, code_length + 1);
     }
 }
