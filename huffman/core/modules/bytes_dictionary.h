@@ -1,11 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdint.h>
-
-#include "huffman_tree.h"
-
 #include "utils.h"
+#include "huffman_tree.h"
 
 #ifndef BYTES_DICTIONARY_H
 #define BYTES_DICTIONARY_H

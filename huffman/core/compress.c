@@ -1,12 +1,66 @@
-#include "main.h"
+#include "compress.h"
 
-#include "priority_queue.h"
-#include "frequency_table.h"
-#include "bytes_dictionary.h"
+void compress(FILE *input_file, char *output_path)
+{
+    // 1. Construímos a tabela de frequências com base no arquivo de entrada
+    uint64_t *frequency_table = build_frequency_table(input_file);
 
-void DEBUG_tree(huffman_node *tree);
+    // 2. Construímos a fila de prioridade com base na tabela de frequências
+    priority_queue *frequency_queue = build_frequency_queue(frequency_table);
 
-uint8_t compress_bytes(FILE *input_file, FILE *output_file, byte_path *paths)
+    // 3. Construímos a árvore de Huffman com base na fila de prioridade
+    huffman_node *tree = build_huffman_tree(frequency_queue);
+    // print_pre_order(tree);
+    // print_tree_visually(tree, 0, '-');
+
+    // 4. Construímos o dicionário que armazena os bytes comprimidos em seus respectivos bytes originais
+
+    byte_path paths[256] = {0}; // Array de byte_path's para armazenar os caminhos de cada byte na árvore de Huffman
+    uint8_t current_path[256];  // Array para armazenar o caminho atual durante a recursão
+
+    // Chamada da função para gerar os caminhos de cada byte na árvore de Huffman
+    build_bytes_dictionary(tree, paths, current_path, 0);
+    // DEBUG_dictionary(paths);
+
+    // 5. Criamos o arquivo de saída
+    FILE *output_file = open_file(output_path, "wb");
+
+    // 6. Realizamos a escrita do cabeçalho (header) do arquivo comprimido
+
+    // 6.1 Inicializamos o cabeçalho do arquivo reservando 2 bytes para o:
+    // ➡ tamanho do lixo (3 bits)
+    // ➡ tamanho da árvore em pré-ordem (13 bits)
+    header_data *header = header_init(output_file);
+
+    // 6.2 Escrevemos a árvore de Huffman no arquivo após os 2 bytes reservados
+    ht_write_pre_order(tree, output_file);
+
+    // 6.3 Escrevemos os bytes comprimidos (obtidos com base no dicionário) no arquivo
+    uint8_t current_byte_index = write_compressed_bytes(input_file, output_file, paths);
+
+    // 6.4 Sobrescrevemos os placeholders (2 bytes) que declaramos anteriormente
+
+    // 6.4.1 Para isso, calculamos o tamanho da árvore de Huffman em pré-ordem
+    header->tree_size = ht_get_tree_size(tree);
+
+    // 6.4.2 E o tamanho do lixo (quantidade de bits que não foram preenchidos no último byte)
+    header->trash_size = (current_byte_index + 1) << 13;
+    /*
+        O tamanho do lixo é calculado da seguinte forma:
+        - Se o último byte não foi completado, o tamanho do lixo é a quantidade de bits que faltam para completá-lo
+        - Se o último byte foi completado, o tamanho do lixo é 0
+    */
+
+    printf("🌳 Tamanho da árvore: %d\n", header->tree_size);
+    printf("🗑️  Tamanho do lixo: %d\n", *(uint16_t *)&header->trash_size >> 13);
+
+    // 6.4.3 Preenchemos os espaços reservados no cabeçalho (header) do arquivo
+    header_write(output_file, header);
+
+    close_file(output_file);
+}
+
+uint8_t write_compressed_bytes(FILE *input_file, FILE *output_file, byte_path *paths)
 {
     // Para isso, precisamos percorrer o arquivo de entrada byte a byte e, para cada byte, percorrer o dicionário para obter o caminho correspondente
     uint8_t current_byte;
@@ -51,69 +105,4 @@ uint8_t compress_bytes(FILE *input_file, FILE *output_file, byte_path *paths)
 
     // Calculamos o tamanho do lixo (quantidade de bits que não foram preenchidos no último byte)
     return current_byte_index;
-}
-
-void compress(FILE *input_file, char *output_path)
-{
-    // 1. Construímos a tabela de frequências com base no arquivo de entrada
-    uint64_t *frequency_table = build_frequency_table(input_file);
-
-    // 2. Construímos a fila de prioridade com base na tabela de frequências
-    priority_queue *frequency_queue = build_frequency_queue(frequency_table);
-
-    // 3. Construímos a árvore de Huffman com base na fila de prioridade
-    huffman_node *tree = build_huffman_tree(frequency_queue);
-    // DEBUG_tree(tree);
-
-    // 4. Construímos o dicionário que armazena os bytes comprimidos em seus respectivos bytes originais
-
-    byte_path paths[256] = {0}; // Array de byte_path's para armazenar os caminhos de cada byte na árvore de Huffman
-    uint8_t current_path[256];  // Array para armazenar o caminho atual durante a recursão
-
-    // Chamada da função para gerar os caminhos de cada byte na árvore de Huffman
-    build_bytes_dictionary(tree, paths, current_path, 0);
-    // DEBUG_dictionary(paths);
-
-    // 5. Criamos o arquivo de saída
-    FILE *output_file = open_file(output_path, "wb");
-
-    // 6. Realizamos a escrita do cabeçalho (header) do arquivo comprimido
-
-    // 6.1 Inicializamos o cabeçalho do arquivo reservando 2 bytes para o:
-    // ➡ tamanho do lixo (3 bits)
-    // ➡ tamanho da árvore em pré-ordem (13 bits)
-    header_data *header = header_init(output_file);
-
-    // 6.2 Escrevemos a árvore de Huffman no arquivo após os 2 bytes reservados
-    ht_write_pre_order(tree, output_file);
-
-    // 6.3 Escrevemos os bytes comprimidos (obtidos com base no dicionário) no arquivo
-    uint8_t current_byte_index = compress_bytes(input_file, output_file, paths);
-
-    // 6.4 Sobrescrevemos os placeholders (2 bytes) que declaramos anteriormente
-
-    // 6.4.1 Para isso, calculamos o tamanho da árvore de Huffman em pré-ordem
-    header->tree_size = ht_get_tree_size(tree);
-
-    // 6.4.2 E o tamanho do lixo (quantidade de bits que não foram preenchidos no último byte)
-    header->trash_size = (current_byte_index + 1) << 13;
-    /*
-        O tamanho do lixo é calculado da seguinte forma:
-        - Se o último byte não foi completado, o tamanho do lixo é a quantidade de bits que faltam para completá-lo
-        - Se o último byte foi completado, o tamanho do lixo é 0
-    */
-
-    printf("🌳 Tamanho da árvore: %d\n", header->tree_size);
-    printf("🗑️  Tamanho do lixo: %d\n", *(uint16_t *)&header->trash_size >> 13);
-
-    // 6.4.3 Preenchemos os espaços reservados no cabeçalho (header) do arquivo
-    header_write(output_file, header);
-
-    close_file(output_file);
-}
-
-void DEBUG_tree(huffman_node *tree)
-{
-    print_pre_order(tree);
-    print_tree_visually(tree, 0, '-');
 }

@@ -1,4 +1,11 @@
-#include "main.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "utils.h"
+#include "file_io.h"
+
+#include "compress.h"
+#include "decompress.h"
 
 void print_usage()
 {
@@ -22,6 +29,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    // Ao executar o programa pelo makefile
     // argv[0] contém o nome do programa
     // argv[1] contém o nome do arquivo que o usuário deseja comprimir
     // printf("%s\n", concat_strings("./input/", argv[1]));

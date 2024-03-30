@@ -1,5 +1,5 @@
-#include "file_io.h"
 #include "utils.h"
+#include "file_io.h"
 
 // Operações de leitura de arquivos
 

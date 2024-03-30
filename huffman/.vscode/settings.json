@@ -4,7 +4,7 @@
         "*.css": "css",
         ".env.example": "properties",
         "priority_queue.h": "c",
-        "frequency_table.h": "c",
+        "frequency.h": "c",
         "__node_handle": "c",
         "linked_list.h": "c",
         "huffman_tree.h": "c",
@@ -13,7 +13,11 @@
         "string_view": "c",
         "vector": "c",
         "stdint.C": "cpp",
-        "random": "c"
+        "random": "c",
+        "utils.h": "c",
+        "bytes_dictionary.h": "c",
+        "string.h": "c",
+        "stdlib.h": "c"
     },
     "cSpell.words": [
         "huffman"

@@ -1,14 +1,8 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdint.h>
-
+#include "utils.h"
 #include "huffman_tree.h"
 
-#include "utils.h"
-
-#ifndef FREQUENCY_TABLE_H
-#define FREQUENCY_TABLE_H
+#ifndef FREQUENCY_H
+#define FREQUENCY_H
 
 /**
  * @brief Constrói uma tabela de frequência a partir de um arquivo de entrada.
@@ -31,4 +25,4 @@ uint64_t *build_frequency_table(FILE *input);
  */
 priority_queue *build_frequency_queue(uint64_t *frequency_table);
 
-#endif // FREQUENCY_TABLE_H
+#endif // FREQUENCY_H
