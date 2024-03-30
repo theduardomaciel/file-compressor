@@ -12,7 +12,7 @@ void process_byte(uint8_t byte, BitProcessingState *state);
 
 void decompress(FILE *input, char *output_path)
 {
-    // Lemos o cabeçalho do arquivo de entrada
+    // Lemos o cabeçalho (header) do arquivo comprimido
     header_data *file_header = header_read(input);
 
     printf("Tamanho do lixo: %d\n", file_header->trash_size);
@@ -20,7 +20,7 @@ void decompress(FILE *input, char *output_path)
     printf("Tamanho do header: %lu\n", file_header->tree_size + sizeof(uint16_t));
 
     // Construímos a árvore de Huffman com base na árvore lida do arquivo de entrada
-    huffman_node *tree = rebuild_huffman_tree(&file_header->tree);
+    huffman_node *tree = rebuild_huffman_tree(&file_header->preorder_tree);
     NULL_POINTER_CHECK(tree);
 
     // print_pre_order(tree);

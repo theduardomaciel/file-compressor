@@ -4,7 +4,6 @@
 #include <stdint.h>
 
 #include "utils.h"
-#include "stack.h"
 #include "priority_queue.h"
 
 #ifndef HUFFMAN_TREE_H
@@ -61,12 +60,12 @@ int is_scaped_char(huffman_node *node);
 int ht_get_tree_size(huffman_node *root);
 
 /**
- * @brief Percorre a árvore de Huffman em pré-ordem, chamando a função de retorno fornecida para cada nó visitado.
+ * @brief Percorre a árvore de Huffman em pré-ordem, escrevendo no arquivo de saída os caracteres de escape e os dados.
  *
  * @param root A raiz da árvore de Huffman.
  * @param output_file O arquivo de saída em que a árvore em pré-ordem será escrita.
  */
-void ht_pre_order(huffman_node *root, FILE *output_file);
+void ht_write_pre_order(huffman_node *root, FILE *output_file);
 
 /**
  * @brief Libera a memória alocada para a árvore de Huffman.

@@ -8,17 +8,23 @@
 typedef struct header_data
 {
     uint16_t trash_size;
-    uint16_t tree_size;
+    uint16_t tree_size; // Tamanho da árvore em pré-ordem
+    uint8_t *preorder_tree;
     uint64_t file_size;
-    uint8_t *tree;
+    /*
+        O tamanho da árvore de Huffman é variável, então o número de bytes necessários para armazená-la também é variável.
+        Portanto, a árvore é armazenada como um array de bytes.
+        Também é possível representar a árvore em pré-ordem como: uint8_t preorder_tree[tree_size]
+    */
 } header_data;
 
 /**
  * @brief Inicializa o cabeçalho.
  *
  * @param file O arquivo onde o cabeçalho será escrito.
+ * @return header_data A struct do header inicializada.
  */
-void header_init(FILE *file);
+header_data *header_init(FILE *file);
 
 /**
  * @brief Escreve o cabeçalho no arquivo.

@@ -85,34 +85,3 @@ priority_queue *build_frequency_queue(uint64_t *frequency_table)
 
     return queue;
 }
-
-void build_bytes_dictionary(huffman_node *current_node, hash_table *table, uint8_t code[MAX_SIZE], size_t code_length)
-{
-    if (current_node != NULL)
-    {
-        // Se chegamos a uma folha, adicionamos o caminho atual ao dicionário de bytes
-        if (is_leaf(current_node))
-        {
-            // Criamos uma cópia do código para evitar que ele seja alterado
-            uint8_t *byte_code = malloc(sizeof(uint8_t) * code_length);
-            NULL_POINTER_CHECK(byte_code);
-
-            // memcpy(byte_code, code, code_length);
-            for (size_t i = 0; i < code_length; i++)
-            {
-                byte_code[i] = code[i];
-            }
-
-            // Inserimos o byte original e seu código no dicionário
-            hash_table_insert(table, *(uint8_t *)current_node->data, byte_code);
-        }
-
-        // Percorrer o lado esquerdo da árvore com 0 adicionado ao código
-        code[code_length] = 0;
-        build_bytes_dictionary(current_node->left, table, code, code_length + 1);
-
-        // Percorrer o lado direito da árvore com 1 adicionado ao código
-        code[code_length] = 1;
-        build_bytes_dictionary(current_node->right, table, code, code_length + 1);
-    }
-}

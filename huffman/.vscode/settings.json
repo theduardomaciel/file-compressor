@@ -5,7 +5,15 @@
         ".env.example": "properties",
         "priority_queue.h": "c",
         "frequency_table.h": "c",
-        "__node_handle": "c"
+        "__node_handle": "c",
+        "linked_list.h": "c",
+        "huffman_tree.h": "c",
+        "array": "c",
+        "string": "c",
+        "string_view": "c",
+        "vector": "c",
+        "stdint.C": "cpp",
+        "random": "c"
     },
     "cSpell.words": [
         "huffman"

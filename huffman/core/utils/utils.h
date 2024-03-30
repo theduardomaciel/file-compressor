@@ -43,11 +43,11 @@
 char *concat_strings(const char *s1, const char *s2);
 
 /**
- * @brief Define o valor de um bit em um byte (unsigned char).
+ * @brief Define o valor de um bit em um byte.
  *
- * @param c Um byte (unsigned char) cujo i-ésimo bit será definido.
+ * @param c Um byte cujo i-ésimo bit será definido.
  * @param i A posição do bit a ser definido. Deve ser um valor entre 0 e 7.
- * @return Retorna um novo byte (unsigned char) em que o i-ésimo bit foi definido (como 1).
+ * @return Retorna um novo byte em que o i-ésimo bit foi definido (como 1).
  */
 unsigned char set_bit(unsigned char c, int i);
 

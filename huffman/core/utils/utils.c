@@ -12,14 +12,8 @@ char *concat_strings(const char *s1, const char *s2)
 
 unsigned char set_bit(unsigned char c, int i)
 {
-    if (i < 0 || i > 7)
-    {
-        // printf("Índice fora do intervalo válido (0 a 7).\n");
-        return c;
-    }
-
-    unsigned char mask = 1 << i;
-    return mask | c;
+    unsigned char mask = 1 << i; // 1 << i move o bit 1 para a esquerda i vezes
+    return mask | c;             // mask | c faz um OR bit a bit entre mask e c
 }
 
 int is_bit_i_set(unsigned char c, int i)

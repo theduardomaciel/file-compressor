@@ -25,9 +25,9 @@ Em C e em linguagens que seguem o padrão C (como C++), uint64_t é definido na 
 
 int main()
 {
-    uint64_t large_number = 18446744073709551615;
-    // O valor máximo que pode ser armazenado em um uint64_t é 18446744073709551615
-    // O valor mínimo é 0
+    uint8_t byte = 0; // 8 bits - representa um byte
+    uint64_t counter = 0; // 64 bits - representa um contador grande
+
     return 0;
 }
 ```
