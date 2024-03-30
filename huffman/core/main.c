@@ -1,6 +1,3 @@
-#include "file_io.h"
-#include "utils.h"
-
 #include "main.h"
 
 void print_usage()
@@ -8,16 +5,6 @@ void print_usage()
     printf("Uso: make run FILE=<nome do arquivo com extensão>\n");
 }
 
-/**
- * Função principal do programa.
- *
- * Esta função é responsável por iniciar a execução do programa.
- * Ela recebe os argumentos da linha de comando e retorna um valor inteiro.
- *
- * @param argc O número de argumentos da linha de comando.
- * @param argv Um array de strings contendo os argumentos da linha de comando.
- * @return Um valor inteiro representando o status de saída do programa.
- */
 int main(int argc, char *argv[])
 {
     printf("%d\n", argc);

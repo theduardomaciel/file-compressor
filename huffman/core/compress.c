@@ -79,32 +79,34 @@ void compress(FILE *input_file, char *output_path)
 
     // 6. Realizamos a escrita do cabeçalho (header) do arquivo comprimido
 
-    // 6.1. Inicializamos o cabeçalho do arquivo reservando 2 bytes para o:
+    // 6.1 Inicializamos o cabeçalho do arquivo reservando 2 bytes para o:
     // ➡ tamanho do lixo (3 bits)
     // ➡ tamanho da árvore em pré-ordem (13 bits)
     header_data *header = header_init(output_file);
 
-    // 6.2. Escrevemos a árvore de Huffman no arquivo após os 2 bytes reservados
+    // 6.2 Escrevemos a árvore de Huffman no arquivo após os 2 bytes reservados
     ht_write_pre_order(tree, output_file);
 
-    // 6.3. Escrevemos os bytes comprimidos (obtidos com base no dicionário) no arquivo
+    // 6.3 Escrevemos os bytes comprimidos (obtidos com base no dicionário) no arquivo
     uint8_t current_byte_index = compress_bytes(input_file, output_file, paths);
 
-    // 6.4. Sobrescrevemos os placeholders (2 bytes) que declaramos anteriormente
+    // 6.4 Sobrescrevemos os placeholders (2 bytes) que declaramos anteriormente
 
-    // Para isso, calculamos o tamanho do lixo e o tamanho da árvore em pré-ordem
-
+    // 6.4.1 Para isso, calculamos o tamanho da árvore de Huffman em pré-ordem
     header->tree_size = ht_get_tree_size(tree);
 
-    // Obtemos o tamanho do lixo obtendo a posição do último bit escrito no arquivo (somamos 1 para isso)
-    // e realizando o bit shift para esquerda de 13, equivalente à quantidade de bits ocupada pelo tamanho da árvore
+    // 6.4.2 E o tamanho do lixo (quantidade de bits que não foram preenchidos no último byte)
     header->trash_size = (current_byte_index + 1) << 13;
+    /*
+        O tamanho do lixo é calculado da seguinte forma:
+        - Se o último byte não foi completado, o tamanho do lixo é a quantidade de bits que faltam para completá-lo
+        - Se o último byte foi completado, o tamanho do lixo é 0
+    */
 
     printf("🌳 Tamanho da árvore: %d\n", header->tree_size);
     printf("🗑️  Tamanho do lixo: %d\n", *(uint16_t *)&header->trash_size >> 13);
-    // printf("Posição do bite atual: %d\n", current_byte_index);
 
-    // Preenchemos os espaços reservados no cabeçalho para o tamanho do lixo e da árvore de Huffman
+    // 6.4.3 Preenchemos os espaços reservados no cabeçalho (header) do arquivo
     header_write(output_file, header);
 
     close_file(output_file);

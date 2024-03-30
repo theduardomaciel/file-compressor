@@ -1,13 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <stdint.h>
+
+#include "huffman_tree.h"
 
 #include "file_io.h"
 #include "header.h"
 #include "utils.h"
-
-#include "huffman_tree.h"
 
 #ifndef MAIN_H
 #define MAIN_H
