@@ -84,7 +84,9 @@ Devido a problemas com a importação e compilação dos arquivos por meio do ar
 ## 🐞 Debug
 
 Ao utilizar a depuração por meio do arquivo `launch.json` presente na pasta `vscode`, certifique-se de não ter nenhum outro terminal aberto ao executar o programa pela depuração.  
-Além disso, não se esqueça de alterar o nome do arquivo no parâmetro _args_ do `launch.json`
+Além disso, não se esqueça de alterar o nome do arquivo utilizado para compressão/descompressão no parâmetro _args_ do `launch.json`
+
+<br />
 
 ## 🚧 Roadmap
 
