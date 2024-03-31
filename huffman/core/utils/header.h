@@ -50,12 +50,4 @@ void header_write_to_file(FILE *file, header_data *header);
  */
 header_data *header_read(FILE *file);
 
-/**
- * @brief Lê a extensão do arquivo armazenada no cabeçalho.
- *
- * @param file O arquivo de onde a extensão será lida.
- * @return A extensão do arquivo lida.
- */
-char *header_read_extension(FILE *file);
-
 #endif // HEADER_H

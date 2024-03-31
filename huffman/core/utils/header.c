@@ -84,38 +84,22 @@ void header_write_to_file(FILE *file, header_data *data)
     free(data);
 }
 
+/**
+ * @brief Lê a extensão do arquivo armazenada no cabeçalho.
+ *
+ * @param file O arquivo de onde a extensão será lida.
+ * @return A extensão do arquivo lida.
+ */
 char *header_read_extension(FILE *file)
 {
-    /* // 1. Pulamos os bytes que antecedem o tamanho do nome da extensão do arquivo original:
-    //  - (2 bytes) tamanho do lixo e tamanho da árvore de Huffman em pré-ordem
-    //  - (tree_size bytes) árvore de Huffman em pré-ordem
-    fseek(file, sizeof(uint16_t) + 1, SEEK_CUR); */
-
-    // 2. Lemos o byte que contém o tamanho do nome da extensão do arquivo original
+    // 1. Lemos o byte que contém o tamanho do nome da extensão do arquivo original
     uint8_t extension_size;
     fread(&extension_size, sizeof(uint8_t), 1, file);
-    printf("Tamanho da extensão: %d\n", extension_size);
 
-    // 3. Extraímos o tamanho do nome da extensão do arquivo original
-    // uint8_t extension_size = size_byte >> 5;
-    // printf("Tamanho do nome da extensão: %d\n", size_byte);
-    /*
-        Como sabemos que o tamanho do nome da extensão do arquivo original ocupa os 3 primeiros bits do byte,
-        podemos realizar um shift de 5 bits para a direita para obter somente esses 3 bits
-
-        Exemplo:    10100000 >> 5
-                    00000101
-
-        Obtemos o valor 101 = 5 (em decimal), que é o tamanho do nome da extensão do arquivo original
-    */
-
-    // 4. Lemos os bytes que contêm a extensão do arquivo original
+    // 2. Lemos os bytes que contêm a extensão do arquivo original
     char *extension = malloc(extension_size + 1); // +1 para o terminador de string/caractere nulo (\0)
     fread(extension, sizeof(char), extension_size, file);
     extension[extension_size] = '\0';
-
-    // 5. Movemos o cursor de leitura para a posição inicial do arquivo
-    // rewind(file);
 
     return extension;
 }
@@ -131,12 +115,6 @@ header_data *header_read(FILE *file)
 
     fread(&first_byte, sizeof(uint8_t), 1, file);
     fread(&second_byte, sizeof(uint8_t), 1, file);
-
-    printf("Bytes lidos: ");
-    for (int i = 0; i < 8; i++)
-    {
-        printf("%d", (first_byte >> (7 - i)) & 1);
-    }
 
     // 2. Extraímos o tamanho do lixo e o tamanho da árvore de Huffman
     data->trash_size = first_byte >> 5;
@@ -209,9 +187,9 @@ header_data *header_read(FILE *file)
     size_t header_size = sizeof(uint16_t) + data->tree_size + sizeof(uint8_t) + sizeof(char) * strlen(data->extension);
     /*
         O tamanho do cabeçalho corresponde à:
-            - 2 bytes (tamanho do lixo e tamanho da árvore em pré-ordem)
+            - 2 bytes = 16 bits (tamanho do lixo e tamanho da árvore em pré-ordem)
             - tree_size bytes (árvore de Huffman em pré-ordem)
-            - 1 byte (tamanho do nome da extensão do arquivo original)
+            - 1 byte = 8 bits (tamanho do nome da extensão do arquivo original)
             - strlen(extension) bytes (extensão do arquivo original)
     */
 
@@ -229,7 +207,6 @@ header_data *header_read(FILE *file)
         Avançamos o cursor de leitura para a posição após o cabeçalho, a fim de que possamos ler os dados compactados
         Fazemos isso para que a leitura dos dados compactados seja feita corretamente posteriormente.
     */
-    printf("Posição atual do cursor: %ld\n", ftell(file));
 
     return data;
 }

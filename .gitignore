@@ -1,6 +1,7 @@
 # Build
 build/
 output/
+input/
 
 # Python
 plotting/env
