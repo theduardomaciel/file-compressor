@@ -19,7 +19,7 @@ typedef struct byte_path
  * @param current_path Array para armazenar o caminho atual na recursão
  * @param depth Profundidade atual na árvore de Huffman (começa em 0)
  */
-void build_bytes_dictionary(huffman_node *node, byte_path paths[256], uint8_t current_path[], int depth);
+void build_bytes_dictionary(huffman_node *node, byte_path paths[MAX_SIZE], uint8_t current_path[], int depth);
 
 /*
     ⮕ Declarações das funções de impressão

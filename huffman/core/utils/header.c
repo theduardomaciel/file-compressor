@@ -132,6 +132,12 @@ header_data *header_read(FILE *file)
     fread(&first_byte, sizeof(uint8_t), 1, file);
     fread(&second_byte, sizeof(uint8_t), 1, file);
 
+    printf("Bytes lidos: ");
+    for (int i = 0; i < 8; i++)
+    {
+        printf("%d", (first_byte >> (7 - i)) & 1);
+    }
+
     // 2. Extraímos o tamanho do lixo e o tamanho da árvore de Huffman
     data->trash_size = first_byte >> 5;
     /*

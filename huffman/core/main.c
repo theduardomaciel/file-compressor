@@ -53,8 +53,6 @@ int main(int argc, char *argv[])
     if (strcmp(extension, "huff") == 0)
     {
         header_data *header = header_read(input_file);
-        printf("Extensão original: %s\n", header->extension);
-
         char *output_path = concat_strings("./output/", concat_strings(input_filename, concat_strings(".", header->extension)));
 
         printf("🫸   🫷 Descomprimindo arquivo `%s` para `%s`...\n\n", argv[1], output_path);

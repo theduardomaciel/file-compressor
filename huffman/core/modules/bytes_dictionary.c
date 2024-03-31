@@ -1,6 +1,6 @@
 #include "bytes_dictionary.h"
 
-void build_bytes_dictionary(huffman_node *node, byte_path paths[256], uint8_t current_path[], int depth)
+void build_bytes_dictionary(huffman_node *node, byte_path paths[MAX_SIZE], uint8_t current_path[], int depth)
 {
     if (node == NULL)
     {
@@ -33,7 +33,7 @@ void build_bytes_dictionary(huffman_node *node, byte_path paths[256], uint8_t cu
 
 void DEBUG_dictionary(byte_path *dictionary)
 {
-    for (int i = 0; i < 256; i++)
+    for (int i = 0; i < MAX_SIZE; i++)
     {
         if (dictionary[i].path_length > 0)
         {

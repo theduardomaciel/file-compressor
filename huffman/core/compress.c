@@ -15,8 +15,8 @@ void compress(FILE *input_file, char *input_extension, char *output_path)
 
     // 4. Construímos o dicionário que armazena os bytes comprimidos em seus respectivos bytes originais
 
-    byte_path paths[256] = {0}; // Array de byte_path's para armazenar os caminhos de cada byte na árvore de Huffman
-    uint8_t current_path[256];  // Array para armazenar o caminho atual durante a recursão
+    byte_path paths[MAX_SIZE] = {0}; // Array de byte_path's para armazenar os caminhos de cada byte na árvore de Huffman
+    uint8_t current_path[MAX_SIZE];  // Array para armazenar o caminho atual durante a recursão
 
     // Chamada da função para gerar os caminhos de cada byte na árvore de Huffman
     build_bytes_dictionary(tree, paths, current_path, 0);

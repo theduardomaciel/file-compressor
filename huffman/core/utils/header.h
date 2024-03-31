@@ -40,7 +40,7 @@ void header_reserve_space(FILE *file);
  * @param file O arquivo onde o cabeçalho será escrito.
  * @param header Os dados do cabeçalho a serem escritos.
  */
-void header_write(FILE *file, header_data *header);
+void header_write_to_file(FILE *file, header_data *header);
 
 /**
  * @brief Lê o cabeçalho do arquivo.
