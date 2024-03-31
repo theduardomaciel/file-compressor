@@ -93,7 +93,7 @@ Além disso, não se esqueça de alterar o nome do arquivo utilizado para compre
 - [x] Desenvolver os módulos de `stack`, `priority_queue` e `huffman_tree` para utilização nos processos de compressão e descompressão
 - [x] Implementar o algoritmo de compressão
 - [x] Implementar o algoritmo de descompressão
-- [ ] Criar casos de testes unitários para as estruturas de dados usadas
+- [x] Criar casos de testes unitários para as estruturas de dados usadas
 
 <br />
 
