@@ -96,7 +96,17 @@ char *header_read_extension(FILE *file)
     uint8_t extension_size;
     fread(&extension_size, sizeof(uint8_t), 1, file);
 
-    // 2. Lemos os bytes que contêm a extensão do arquivo original
+    // 2. Extraímos o tamanho da extensão do arquivo original
+    extension_size = extension_size >> 5;
+    /*
+        Desfazemos o shift de 5 bits para a esquerda que foi feito na compressão por requisito
+        para obter o tamanho do nome da extensão do arquivo original
+
+        Exemplo:    01100000 >> 5
+                    00000011
+    */
+
+    // 3. Escrevemos os bytes que contêm a extensão do arquivo original
     char *extension = malloc(extension_size + 1); // +1 para o terminador de string/caractere nulo (\0)
     fread(extension, sizeof(char), extension_size, file);
     extension[extension_size] = '\0';

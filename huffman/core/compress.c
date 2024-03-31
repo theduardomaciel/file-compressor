@@ -36,9 +36,20 @@ void compress(FILE *input_file, char *input_extension, char *output_path)
     ht_write_pre_order(tree, output_file);
 
     // 6.3 Escrevemos um byte contendo o tamanho do nome da extensão do arquivo original
-    uint8_t extension_length = strlen(input_extension);
-    fwrite(&extension_length, sizeof(uint8_t), 1, output_file);
-    // printf("Tamanho da extensão: %d\n", extension_length);
+    int extension_length = strlen(input_extension);
+    uint8_t extension_length_byte = extension_length << 5;
+    /*
+        Como por requisito o tamanho da extensão do arquivo original deve estar
+        nos 3 primeiros bits do byte, realizamos um shift de 5 bits para a esquerda
+
+        Exemplo:    00000011 (3 em decimal) << 5
+                    01100000
+
+        Obs.: Não podemos realizar o shift bit diretamente em strlen(input_extension)
+        por conta de problemas que resultavam em valores incorretos devido ao buffer
+    */
+
+    fwrite(&extension_length_byte, sizeof(uint8_t), 1, output_file);
 
     // 6.4 Escrevemos a extensão do arquivo original
     fwrite(input_extension, sizeof(char), extension_length, output_file);
