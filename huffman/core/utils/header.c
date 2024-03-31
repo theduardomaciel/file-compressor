@@ -64,7 +64,7 @@ void header_write_to_file(FILE *file, header_data *data)
         Obtemos o byte 10100000, que é o primeiro byte do cabeçalho
     */
 
-    uint8_t second_byte = header & 11111111;
+    uint8_t second_byte = header & 0b11111111;
     /*
         Exemplo:    10100000 00001011
                     00000000 11111111 &
@@ -72,6 +72,7 @@ void header_write_to_file(FILE *file, header_data *data)
                     00000000 00001011
 
         Obtemos somente os 8 últimos do valor, que é o segundo byte do cabeçalho
+        Para mais informações sobre máscaras de bits, leia `docs/masks.md`
     */
 
     // Movemos o cursor para o início do arquivo
@@ -106,49 +107,75 @@ header_data *header_read(FILE *file)
         Obtemos o valor 101 = 5 (em decimal), que é o tamanho do lixo
     */
 
-    data->tree_size = (first_byte & 00011111) << 8 | second_byte;
+    data->tree_size = (first_byte & 0b00011111) << 8 | second_byte;
     /*
         Como o tamanho da árvore em pré-ordem ocupa os 5 bits restantes do primeiro byte do cabeçalho
         e todos os 8 bits do segundo byte, precisamos combinar esses bits em um único valor
 
+        Exemplo:    Byte 1: 10100010 (tamanho do lixo = 101 = 5)
+                    Byte 2: 00001011 (tamanho da árvore em pré-ordem = 1000001011 = 523)
+
         Para isso, realizamos um AND bit a bit com o primeiro byte e 00011111,
         a fim de obter somente os 5 bits que possam ter ficado no primeiro byte
 
-        Exemplo:    10100000
+        Exemplo:    10100010
                     00011111 &
                     ----------
-                    00000000
+                    00000010
 
         Em seguida, realizamos um shift de 8 bits para a esquerda com o valor obtido,
         a fim de obter os 8 bits do segundo byte no lugar correto
 
-        Exemplo:    00000000 << 8
-                    00000000
+        Exemplo:    00000000 00000010 << 8  (como tree_size é um uint16_t, o shift bit não é truncado)
+
+                    00000000 00000010
+                    00000000 00000100       (1)
+                    00000000 00001000 (2)
+                    00000000 00010000 (3)
+                    00000000 00100000 (4)
+                    00000000 01000000 (5)
+                    00000000 10000000 (6)
+                    00000001 00000000 (7)
+                    00000010 00000000 (8)
+
+                    00000010 00000000
 
         Por fim, realizamos um OR bit a bit entre o valor obtido e o segundo byte,
         a fim de obter o tamanho da árvore em pré-ordem
 
-        Exemplo:    00000000
-                    00001011 |
-                    ----------
-                    00001011
+        Exemplo:    00000010 00000000
+                             00001011 |
+                    -------------------
+                    00000010 00001011
 
-        Obtemos o valor 1011 = 11 (em decimal), que é o tamanho da árvore de Huffman
+        Obtemos o valor 1000001011 = 523 (em decimal), que é o tamanho da árvore em pré-ordem
     */
 
+    // 3. Extraímos a árvore de Huffman em pré-ordem
     data->preorder_tree = malloc(data->tree_size);
     fread(data->preorder_tree, sizeof(uint8_t), data->tree_size, file);
+    /*
+        Como já lemos os 2 bytes iniciais do arquivo, o cursor de leitura
+        já está na posição correta para ler a árvore de Huffman em pré-ordem
+    */
 
-    // 3. Obtemos o tamanho do arquivo compactado
+    // 4. Obtemos o tamanho do arquivo compactado
 
-    // Para isso, movemos o cursor para o final do arquivo
+    // 4.1 Para isso, movemos o cursor para o final do arquivo
     fseek(file, 0, SEEK_END);
 
-    // E obtemos a posição atual do cursor, que é o tamanho do arquivo em bytes
+    // 4.2 E obtemos a posição atual do cursor, que é o tamanho do arquivo em bytes
     data->file_size = ftell(file);
 
-    // 4. Movemos o cursor de leitura para a posição correta (após o cabeçalho e a árvore de Huffman)
+    // 5. Movemos o cursor de leitura para a posição correta (após o cabeçalho)
     fseek(file, sizeof(uint16_t) + data->tree_size, SEEK_SET);
+    /*
+        Como o tamanho do lixo e o tamanho da árvore em pré-ordem são armazenados em 2 bytes
+        e a árvore de Huffman em pré-ordem é armazenada logo após esses 2 bytes,
+        podemos mover o cursor de leitura para a posição correta somando o tamanho da árvore em pré-ordem
+
+        Fazemos isso para que a leitura dos dados compactados seja feita corretamente posteriormente.
+    */
 
     return data;
 }
