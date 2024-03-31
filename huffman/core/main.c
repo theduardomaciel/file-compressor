@@ -30,13 +30,8 @@ int main(int argc, char *argv[])
     }
 
     // Ao executar o programa pelo makefile
-    // argv[0] contém o nome do programa
-    // argv[1] contém o nome do arquivo que o usuário deseja comprimir
-    // printf("%s\n", concat_strings("./input/", argv[1]));
-
-    // Como de acordo com as especificações do projeto o arquivo comprimido deve ter um header fixo,
-    // não podemos armazenar o tipo de arquivo original nele para posterior descompressão
-    // Assim sendo, precisamos verificar se a última extensão do arquivo é .huff
+    // argv[0] contém o nome do programa (por exemplo, ././build/huffman, portanto, pode ser ignorado)
+    // argv[1] contém o nome do arquivo que o usuário deseja comprimir ou descomprimir (por exemplo, teste.txt)
 
     FILE *input_file = open_file(concat_strings("./input/", argv[1]), "rb");
 
@@ -46,21 +41,34 @@ int main(int argc, char *argv[])
     char *extension = extract_extension(argv[1]);
     // printf("Extensão: %s\n", extension);
 
+    // Verificamos se o arquivo fornecido possui uma extensão válida
+    if (strlen(extension) > 6)
+    {
+        printf("❌ Não é possível compactar arquivos do tipo fornecido!\n");
+        exit(1);
+    }
+
     create_directory("./output"); // Criamos a pasta outputs caso ela não exista
 
-    if (strcmp(extension, ".huff") == 0)
+    if (strcmp(extension, "huff") == 0)
     {
-        char *output_path = concat_strings("./output/", input_filename);
+        header_data *header = header_read(input_file);
+        printf("Extensão original: %s\n", header->extension);
 
-        printf("🫸   🫷 Descomprimindo arquivo `%s` para `%s`...\n\n", concat_strings(input_filename, extension), output_path);
-        decompress(input_file, output_path);
+        char *output_path = concat_strings("./output/", concat_strings(input_filename, concat_strings(".", header->extension)));
+
+        printf("🫸   🫷 Descomprimindo arquivo `%s` para `%s`...\n\n", argv[1], output_path);
+        decompress(input_file, header, output_path);
+
         printf("✅ Arquivo descompactado com sucesso!\n");
     }
     else
     {
-        char *output_path = concat_strings(concat_strings("./output/", argv[1]), ".huff");
-        printf("🤏 Comprimindo arquivo `%s` para `%s`...\n\n", concat_strings(input_filename, extension), output_path);
-        compress(input_file, output_path);
+        char *output_path = concat_strings("./output/", concat_strings(input_filename, ".huff"));
+
+        printf("🤏 Comprimindo arquivo `%s` para `%s`...\n\n", concat_strings(input_filename, concat_strings(".", extension)), output_path);
+        compress(input_file, extension, output_path);
+
         printf("✅ Arquivo compactado com sucesso!\n");
     }
 

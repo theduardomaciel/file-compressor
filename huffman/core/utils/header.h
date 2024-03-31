@@ -1,16 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include "string.h"
 
 #ifndef HEADER_H
 #define HEADER_H
 
 typedef struct header_data
 {
+    char *extension;
+    size_t file_size;
     uint16_t trash_size;
     uint16_t tree_size; // Tamanho da árvore em pré-ordem
     uint8_t *preorder_tree;
-    uint64_t file_size;
     /*
         O tamanho da árvore de Huffman é variável, então o número de bytes necessários para armazená-la também é variável.
         Portanto, a árvore é armazenada como um array de bytes.
@@ -47,5 +49,13 @@ void header_write(FILE *file, header_data *header);
  * @return Os dados do cabeçalho lidos.
  */
 header_data *header_read(FILE *file);
+
+/**
+ * @brief Lê a extensão do arquivo armazenada no cabeçalho.
+ *
+ * @param file O arquivo de onde a extensão será lida.
+ * @return A extensão do arquivo lida.
+ */
+char *header_read_extension(FILE *file);
 
 #endif // HEADER_H

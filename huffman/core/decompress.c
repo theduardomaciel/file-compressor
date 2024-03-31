@@ -1,61 +1,62 @@
 #include "decompress.h"
 
-void decompress(FILE *input, char *output_path)
+void decompress(FILE *input, header_data *header, char *output_path)
 {
-    // 1. Lemos o cabeçalho (header) do arquivo comprimido
-    header_data *file_header = header_read(input);
+    // DEBUG: Lemos o cabeçalho (header) do arquivo comprimido
+    printf("🗃️  Componentes do header: \n");
+    printf("-------------------------\n");
+    printf("🗑️  Tamanho do lixo: %d\n", header->trash_size);
+    printf("📏🌳 Tamanho da árvore: %d\n", header->tree_size);
+    // printf("🌳 Árvore em pré-ordem: %s\n", header->preorder_tree);
+    printf("📁 Tamanho da extensão: %lu\n", strlen(header->extension));
+    printf("📚 Extensão: %s\n", header->extension);
+    printf("🤏 Tamanho dos bytes comprimidos: %ld\n", header->file_size);
+    printf("-------------------------\n");
 
-    printf("🗃️  Tamanho do header: %ld + %d = %lu\n", sizeof(uint16_t), file_header->tree_size, sizeof(uint16_t) + file_header->tree_size);
-
-    // 2. Construímos a árvore de Huffman com base na árvore em pré-ordem presente no cabeçalho
-    huffman_node *tree = rebuild_huffman_tree(&file_header->preorder_tree);
+    // 1. Construímos a árvore de Huffman com base na árvore em pré-ordem presente no cabeçalho
+    huffman_node *tree = rebuild_huffman_tree(&header->preorder_tree);
     NULL_POINTER_CHECK(tree);
     // print_pre_order(tree);
     // print_tree_visually(tree, 0, '-');
 
-    // 3. Criamos o arquivo descomprimido
+    // 2. Criamos o arquivo descomprimido
     FILE *output_file = open_file(output_path, "wb");
 
-    // 4. Calculamos o tamanho do arquivo original
-    uint64_t bytes_to_read = file_header->file_size - (sizeof(uint16_t) + file_header->tree_size);
-    /*
-        O tamanho do arquivo original é igual ao tamanho do arquivo comprimido menos o tamanho do cabeçalho,
-        adicionado no arquivo comprimido para que possamos reconstruir o arquivo original
-
-        O tamanho do cabeçalho é igual ao:
-            [tamanho do lixo + tamanho da árvore em pré-ordem] (2 bytes) + [árvore em pré-ordem]
-
-        Portanto, o tamanho do arquivo original é igual ao :
-            [tamanho do arquivo comprimido] - [tamanho do cabeçalho]
-    */
-
-    printf("📁 Tamanho total do arquivo comprimido: %lu (%lu bytes de dados)\n", file_header->file_size, bytes_to_read);
-
-    // 5. Realizamos a leitura dos novos bytes descomprimidos no arquivo de saída
+    // 3. Realizamos a leitura dos novos bytes descomprimidos no arquivo de saída
     huffman_node *current_node = tree; // criamos uma variável para percorrer a árvore de Huffman
     uint8_t current_byte;
 
-    // 5.1 Lemos os bytes do arquivo de entrada, exceto o último, que pode conter lixo
-    for (uint64_t byte_index = 0; byte_index < bytes_to_read - 1; byte_index++)
+    // 3.1 Lemos os bytes comprimidos no arquivo, exceto o último, que pode conter lixo
+    for (uint64_t byte_index = 0; byte_index < header->file_size - 1; byte_index++)
     {
         fread(&current_byte, sizeof(uint8_t), 1, input);
 
         write_original_bytes(output_file, tree, &current_node, current_byte, 0);
     }
 
-    // 5.2 Caso o arquivo tenha lixo, lemos o último byte
-    if (file_header->trash_size > 0)
+    // 3.2 Caso o arquivo tenha lixo, lemos o último byte
+    if (header->trash_size > 0)
     {
         fread(&current_byte, sizeof(uint8_t), 1, input);
 
         // Como o último byte pode conter bits que não fazem parte do arquivo original, o lixo, não podemos ler todos os 8 bits
         // Portanto, enviamos o tamanho do lixo como argumento para que a função saiba quantos bits deve ler
-        write_original_bytes(output_file, tree, &current_node, current_byte, file_header->trash_size);
+        write_original_bytes(output_file, tree, &current_node, current_byte, header->trash_size);
     }
 
-    // 6. Fechamos o arquivo de saída
+    // 4. Fechamos o arquivo de saída
     fclose(output_file);
 }
+
+/*
+    Aqui, para não ter que retornar o nó atual a cada leitura de byte, passamos o endereço do nó atual como argumento
+    e atualizamos o nó atual conforme percorremos a árvore de Huffman
+
+    Dessa forma, podemos ler os bytes do arquivo de entrada e escrever os bytes originais no arquivo de saída,
+    sem precisar atualizar o valor de current_node na função principal após cada leitura de byte
+
+    Uma versão alternativa está presente na pasta "alternatives" no diretório atual.
+*/
 
 void write_original_bytes(FILE *output_file, huffman_node *tree, huffman_node **current_node, uint8_t byte, uint8_t end_bit)
 {

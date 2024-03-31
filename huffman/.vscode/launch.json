@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${fileDirname}/${fileBasenameNoExtension}",
-            "args": ["key.mp4.huff"],
+            "args": ["etica.huff"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

@@ -44,7 +44,7 @@ char *extract_extension(const char *filename)
     // Se encontrarmos, retornamos a string a partir do ponto
     if (dot != NULL)
     {
-        return dot;
+        return *dot == '\0' ? NULL : dot + 1;
     }
 
     return NULL;

@@ -1,6 +1,6 @@
 #include "compress.h"
 
-void compress(FILE *input_file, char *output_path)
+void compress(FILE *input_file, char *input_extension, char *output_path)
 {
     // 1. Construímos a tabela de frequências com base no arquivo de entrada
     uint64_t *frequency_table = build_frequency_table(input_file);
@@ -35,6 +35,15 @@ void compress(FILE *input_file, char *output_path)
     // 6.2 Escrevemos a árvore de Huffman no arquivo após os 2 bytes reservados
     ht_write_pre_order(tree, output_file);
 
+    // 6.3 Escrevemos um byte contendo o tamanho do nome da extensão do arquivo original
+    uint8_t extension_length = strlen(input_extension);
+    fwrite(&extension_length, sizeof(uint8_t), 1, output_file);
+    // printf("Tamanho da extensão: %d\n", extension_length);
+
+    // 6.4 Escrevemos a extensão do arquivo original
+    fwrite(input_extension, sizeof(char), extension_length, output_file);
+    // podia ser: fputs(input_extension, output_file);
+
     // 6.3 Escrevemos os bytes comprimidos (obtidos com base no dicionário) no arquivo
     int trash_size = write_compressed_bytes(input_file, output_file, paths);
 
@@ -53,7 +62,7 @@ void compress(FILE *input_file, char *output_path)
     header->tree_size = ht_get_tree_size(tree);
 
     printf("🗑️  Tamanho do lixo: %d\n", trash_size);
-    printf("🌳 Tamanho da árvore: %d\n", header->tree_size);
+    printf("📏🌳 Tamanho da árvore: %d\n", header->tree_size);
 
     // 6.4.3 Preenchemos os espaços reservados no cabeçalho (header) do arquivo
     header_write_to_file(output_file, header);

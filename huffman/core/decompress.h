@@ -11,9 +11,10 @@
  * Descomprime o arquivo de entrada e salva o resultado no caminho de saída especificado.
  *
  * @param input O ponteiro para o arquivo de entrada a ser descomprimido.
+ * @param header O cabeçalho do arquivo de entrada.
  * @param output_path O caminho para o arquivo de saída onde o resultado será salvo.
  */
-void decompress(FILE *input, char *output_path);
+void decompress(FILE *input, header_data *header, char *output_path);
 
 /**
  * Descomprime os bytes, escrevendo os correspondentes originais no arquivo de saída.

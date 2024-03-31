@@ -84,9 +84,48 @@ void header_write_to_file(FILE *file, header_data *data)
     free(data);
 }
 
+char *header_read_extension(FILE *file)
+{
+    /* // 1. Pulamos os bytes que antecedem o tamanho do nome da extensão do arquivo original:
+    //  - (2 bytes) tamanho do lixo e tamanho da árvore de Huffman em pré-ordem
+    //  - (tree_size bytes) árvore de Huffman em pré-ordem
+    fseek(file, sizeof(uint16_t) + 1, SEEK_CUR); */
+
+    // 2. Lemos o byte que contém o tamanho do nome da extensão do arquivo original
+    uint8_t extension_size;
+    fread(&extension_size, sizeof(uint8_t), 1, file);
+    printf("Tamanho da extensão: %d\n", extension_size);
+
+    // 3. Extraímos o tamanho do nome da extensão do arquivo original
+    // uint8_t extension_size = size_byte >> 5;
+    // printf("Tamanho do nome da extensão: %d\n", size_byte);
+    /*
+        Como sabemos que o tamanho do nome da extensão do arquivo original ocupa os 3 primeiros bits do byte,
+        podemos realizar um shift de 5 bits para a direita para obter somente esses 3 bits
+
+        Exemplo:    10100000 >> 5
+                    00000101
+
+        Obtemos o valor 101 = 5 (em decimal), que é o tamanho do nome da extensão do arquivo original
+    */
+
+    // 4. Lemos os bytes que contêm a extensão do arquivo original
+    char *extension = malloc(extension_size + 1); // +1 para o terminador de string/caractere nulo (\0)
+    fread(extension, sizeof(char), extension_size, file);
+    extension[extension_size] = '\0';
+
+    // 5. Movemos o cursor de leitura para a posição inicial do arquivo
+    // rewind(file);
+
+    return extension;
+}
+
 header_data *header_read(FILE *file)
 {
-    // 1. Lemos os 2 primeiros bytes do arquivo
+    // 1. Inicializamos a struct que armazenará os dados do cabeçalho
+    header_data *data = header_init();
+
+    // 2. Lemos os 2 primeiros bytes do arquivo
     uint8_t first_byte;
     uint8_t second_byte;
 
@@ -94,8 +133,6 @@ header_data *header_read(FILE *file)
     fread(&second_byte, sizeof(uint8_t), 1, file);
 
     // 2. Extraímos o tamanho do lixo e o tamanho da árvore de Huffman
-    header_data *data = header_init();
-
     data->trash_size = first_byte >> 5;
     /*
         Como sabemos que o tamanho do lixo ocupa os 3 primeiros bits do primeiro byte do cabeçalho,
@@ -159,23 +196,34 @@ header_data *header_read(FILE *file)
         já está na posição correta para ler a árvore de Huffman em pré-ordem
     */
 
-    // 4. Obtemos o tamanho do arquivo compactado
+    // 3. Extraímos a extensão do arquivo
+    data->extension = header_read_extension(file);
 
-    // 4.1 Para isso, movemos o cursor para o final do arquivo
+    // 4. Obtemos o tamanho do header
+    size_t header_size = sizeof(uint16_t) + data->tree_size + sizeof(uint8_t) + sizeof(char) * strlen(data->extension);
+    /*
+        O tamanho do cabeçalho corresponde à:
+            - 2 bytes (tamanho do lixo e tamanho da árvore em pré-ordem)
+            - tree_size bytes (árvore de Huffman em pré-ordem)
+            - 1 byte (tamanho do nome da extensão do arquivo original)
+            - strlen(extension) bytes (extensão do arquivo original)
+    */
+
+    // 5. Obtemos o tamanho ocupado pelos bytes compactados
+
+    // 5.1 Para isso, movemos o cursor para o final do arquivo
     fseek(file, 0, SEEK_END);
 
-    // 4.2 E obtemos a posição atual do cursor, que é o tamanho do arquivo em bytes
-    data->file_size = ftell(file);
+    // 5.2 E obtemos a posição atual do cursor, que é o tamanho do arquivo em bytes
+    data->file_size = ftell(file) - header_size;
 
-    // 5. Movemos o cursor de leitura para a posição correta (após o cabeçalho)
-    fseek(file, sizeof(uint16_t) + data->tree_size, SEEK_SET);
+    // 6. Movemos o cursor de leitura para a posição correta (após o cabeçalho)
+    fseek(file, header_size, SEEK_SET);
     /*
-        Como o tamanho do lixo e o tamanho da árvore em pré-ordem são armazenados em 2 bytes
-        e a árvore de Huffman em pré-ordem é armazenada logo após esses 2 bytes,
-        podemos mover o cursor de leitura para a posição correta somando o tamanho da árvore em pré-ordem
-
+        Avançamos o cursor de leitura para a posição após o cabeçalho, a fim de que possamos ler os dados compactados
         Fazemos isso para que a leitura dos dados compactados seja feita corretamente posteriormente.
     */
+    printf("Posição atual do cursor: %ld\n", ftell(file));
 
     return data;
 }

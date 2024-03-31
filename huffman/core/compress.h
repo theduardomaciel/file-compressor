@@ -14,9 +14,10 @@
  * @brief Comprime o conteúdo de um arquivo de entrada e salva o resultado em um arquivo de saída.
  *
  * @param input O ponteiro para o arquivo de entrada.
+ * @param input_extension A extensão do arquivo de entrada.
  * @param output_path O caminho para o arquivo de saída.
  */
-void compress(FILE *input, char *output_path);
+void compress(FILE *input_file, char *input_extension, char *output_path);
 
 /**
  * @brief Escreve os bytes comprimidos no arquivo de saída.

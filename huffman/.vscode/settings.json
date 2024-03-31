@@ -17,7 +17,12 @@
         "utils.h": "c",
         "bytes_dictionary.h": "c",
         "string.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "compress.h": "c",
+        "file_io.h": "c",
+        "cstring": "c",
+        "locale": "c",
+        "header.h": "c"
     },
     "cSpell.words": [
         "huffman"
