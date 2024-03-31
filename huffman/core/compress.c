@@ -27,10 +27,10 @@ void compress(FILE *input_file, char *output_path)
 
     // 6. Realizamos a escrita do cabeçalho (header) do arquivo comprimido
 
-    // 6.1 Inicializamos o cabeçalho do arquivo reservando 2 bytes para o:
+    // 6.1 Antes de realizarmos outras escritas no arquivo, reservamos 2 bytes para o:
     // ➡ tamanho do lixo (3 bits)
     // ➡ tamanho da árvore em pré-ordem (13 bits)
-    header_data *header = header_init(output_file);
+    header_reserve_space(output_file);
 
     // 6.2 Escrevemos a árvore de Huffman no arquivo após os 2 bytes reservados
     ht_write_pre_order(tree, output_file);
@@ -38,7 +38,8 @@ void compress(FILE *input_file, char *output_path)
     // 6.3 Escrevemos os bytes comprimidos (obtidos com base no dicionário) no arquivo
     int trash_size = write_compressed_bytes(input_file, output_file, paths);
 
-    // 6.4 Sobrescrevemos os placeholders (2 bytes) que declaramos anteriormente
+    // 6.4 Sobrescrevemos o espaço reservado no arquivo (2 bytes) anteriormente com os dados reais
+    header_data *header = header_init();
 
     // 6.4.1 Para isso, inserimos o tamanho do lixo (quantidade de bits que não foram preenchidos no último byte)
     header->trash_size = trash_size << 13;

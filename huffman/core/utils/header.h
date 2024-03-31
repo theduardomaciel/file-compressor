@@ -21,10 +21,16 @@ typedef struct header_data
 /**
  * @brief Inicializa o cabeçalho.
  *
- * @param file O arquivo onde o cabeçalho será escrito.
  * @return header_data A struct do header inicializada.
  */
-header_data *header_init(FILE *file);
+header_data *header_init();
+
+/**
+ * @brief Reserva espaço para o cabeçalho no arquivo.
+ *
+ * @param file O arquivo onde o espaço será reservado.
+ */
+void header_reserve_space(FILE *file);
 
 /**
  * @brief Escreve o cabeçalho no arquivo.

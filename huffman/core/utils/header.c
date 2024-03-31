@@ -23,15 +23,19 @@
         Obs.: Esses bytes são escritos por meio da loop pelo arquivo, a partir do qual vamos escrevendo os bytes comprimidos correspondentes no arquivo comprimido.
 */
 
-header_data *header_init(FILE *file)
+header_data *header_init()
+{
+    // Retornamos a struct que criamos para armazenar os dados do header com sua memória alocada
+    header_data *header = malloc(sizeof(header_data));
+    return header;
+}
+
+void header_reserve_space(FILE *file)
 {
     // Reservamos os 2 bytes iniciais para o tamanho do lixo e o tamanho da árvore em pré-ordem
     uint16_t reserved_bytes = 0;
     fwrite(&reserved_bytes, sizeof(uint16_t), 1, file);
-
-    // Retornamos a struct que criamos para armazenar os dados do header com sua memória alocada
-    header_data *header = malloc(sizeof(header_data));
-    return header;
+    // alternativa: fwrite("\0\0", sizeof(uint8_t), 2, file);
 }
 
 void header_write_to_file(FILE *file, header_data *data)
@@ -42,7 +46,7 @@ void header_write_to_file(FILE *file, header_data *data)
 
         Para isso, utilizamos um operador OR bit a bit
         Exemplo:    10100000 00000000   (tamanho do lixo = 5)
-                    00000000 00001011   (tamanho da árvore em pré-ordem = 11)
+                    00000000 00001011 | (tamanho da árvore em pré-ordem = 11)
                     -------------------
                     10100000 00001011
 
@@ -89,9 +93,48 @@ header_data *header_read(FILE *file)
     fread(&second_byte, sizeof(uint8_t), 1, file);
 
     // 2. Extraímos o tamanho do lixo e o tamanho da árvore de Huffman
-    header_data *data = malloc(sizeof(header_data));
+    header_data *data = header_init();
+
     data->trash_size = first_byte >> 5;
-    data->tree_size = (first_byte & 0x1F) << 8 | second_byte; // 0x1F = 11111
+    /*
+        Como sabemos que o tamanho do lixo ocupa os 3 primeiros bits do primeiro byte do cabeçalho,
+        podemos realizar um shift de 5 bits para a direita para obter somente esses 3 bits
+
+        Exemplo:    10100000 >> 5
+                    00000101
+
+        Obtemos o valor 101 = 5 (em decimal), que é o tamanho do lixo
+    */
+
+    data->tree_size = (first_byte & 00011111) << 8 | second_byte;
+    /*
+        Como o tamanho da árvore em pré-ordem ocupa os 5 bits restantes do primeiro byte do cabeçalho
+        e todos os 8 bits do segundo byte, precisamos combinar esses bits em um único valor
+
+        Para isso, realizamos um AND bit a bit com o primeiro byte e 00011111,
+        a fim de obter somente os 5 bits que possam ter ficado no primeiro byte
+
+        Exemplo:    10100000
+                    00011111 &
+                    ----------
+                    00000000
+
+        Em seguida, realizamos um shift de 8 bits para a esquerda com o valor obtido,
+        a fim de obter os 8 bits do segundo byte no lugar correto
+
+        Exemplo:    00000000 << 8
+                    00000000
+
+        Por fim, realizamos um OR bit a bit entre o valor obtido e o segundo byte,
+        a fim de obter o tamanho da árvore em pré-ordem
+
+        Exemplo:    00000000
+                    00001011 |
+                    ----------
+                    00001011
+
+        Obtemos o valor 1011 = 11 (em decimal), que é o tamanho da árvore de Huffman
+    */
 
     data->preorder_tree = malloc(data->tree_size);
     fread(data->preorder_tree, sizeof(uint8_t), data->tree_size, file);
