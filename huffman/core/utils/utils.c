@@ -12,7 +12,7 @@ char *concat_strings(const char *s1, const char *s2)
 
 unsigned char set_bit(unsigned char c, int i)
 {
-    unsigned char mask = 1 << i; // 1 << i move o bit 1 para a esquerda i vezes
+    unsigned char mask = 1 << i; // 1 << i faz o shift bit para esquerda do byte 00000001 (1 em decimal) i vezes
     return mask | c;             // mask | c faz um OR bit a bit entre mask e c
 }
 

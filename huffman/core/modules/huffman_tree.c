@@ -76,7 +76,7 @@ int ht_get_tree_size(huffman_node *root)
     int size = 1;
 
     // Caso o nó atual seja uma folha que pode ser confundida com um nó interno,
-    // incrementamos o tamanho em +1 para considerar o caractere de escape
+    // incrementamos o tamanho em +1 pois adicionamos um caractere de escape ao escrever a árvore em pré-ordem
     if (is_leaf(root) && is_scaped_char(root))
     {
         size++;
@@ -126,6 +126,7 @@ huffman_node *build_huffman_tree(priority_queue *queue)
     return (huffman_node *)pq_dequeue(queue);
 }
 
+// TO-DO: Refatorar a função abaixo
 huffman_node *rebuild_huffman_tree(uint8_t **pre_order_tree)
 {
     // Alocamos espaço para armazenar o símbolo atual da árvore

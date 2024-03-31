@@ -36,28 +36,52 @@ void compress(FILE *input_file, char *output_path)
     ht_write_pre_order(tree, output_file);
 
     // 6.3 Escrevemos os bytes comprimidos (obtidos com base no dicionário) no arquivo
-    uint8_t current_byte_index = write_compressed_bytes(input_file, output_file, paths);
+    int trash_size = write_compressed_bytes(input_file, output_file, paths);
 
     // 6.4 Sobrescrevemos os placeholders (2 bytes) que declaramos anteriormente
 
-    // 6.4.1 Para isso, calculamos o tamanho da árvore de Huffman em pré-ordem
-    header->tree_size = ht_get_tree_size(tree);
-
-    // 6.4.2 E o tamanho do lixo (quantidade de bits que não foram preenchidos no último byte)
-    header->trash_size = (current_byte_index + 1) << 13;
+    // 6.4.1 Para isso, inserimos o tamanho do lixo (quantidade de bits que não foram preenchidos no último byte)
+    header->trash_size = trash_size << 13;
     /*
-        O tamanho do lixo é calculado da seguinte forma:
-        - Se o último byte não foi completado, o tamanho do lixo é a quantidade de bits que faltam para completá-lo
-        - Se o último byte foi completado, o tamanho do lixo é 0
+        Realizamos um shift de 13 bits para a esquerda pois o tamanho do lixo
+        ocupa os 3 primeiros bits do primeiro byte do cabeçalho:
+        16 bits (2 bytes) - 3 bits (tamanho do lixo) = 13 bits
     */
 
+    // 6.4.2 E o tamanho da árvore de Huffman em pré-ordem
+    header->tree_size = ht_get_tree_size(tree);
+
+    printf("🗑️  Tamanho do lixo: %d\n", trash_size);
     printf("🌳 Tamanho da árvore: %d\n", header->tree_size);
-    printf("🗑️  Tamanho do lixo: %d\n", *(uint16_t *)&header->trash_size >> 13);
 
     // 6.4.3 Preenchemos os espaços reservados no cabeçalho (header) do arquivo
-    header_write(output_file, header);
+    header_write_to_file(output_file, header);
 
     close_file(output_file);
+}
+
+void DEBUG_print_byte(uint8_t byte)
+{
+    for (int i = 7; i >= 0; i--)
+    {
+        printf("%d", byte >> i & 1);
+    }
+    printf(" ");
+}
+
+void DEBUG_print_byte_with_trash(uint8_t byte, int current_byte_index)
+{
+    printf("[");
+    for (int i = 7; i >= 0; i--)
+    {
+        if (i == current_byte_index)
+        {
+            printf("-");
+        }
+        printf("%d", byte >> i & 1);
+    }
+    printf("] (último byte com lixo)");
+    printf("\n");
 }
 
 uint8_t write_compressed_bytes(FILE *input_file, FILE *output_file, byte_path *paths)
@@ -70,6 +94,7 @@ uint8_t write_compressed_bytes(FILE *input_file, FILE *output_file, byte_path *p
     uint8_t new_byte = 0;
 
     // Percorremos cada byte do arquivo
+    printf("Bytes escritos no arquivo:\n");
     while (fread(&current_byte, sizeof(uint8_t), 1, input_file) == 1)
     {
         byte_path current = paths[current_byte];
@@ -80,16 +105,34 @@ uint8_t write_compressed_bytes(FILE *input_file, FILE *output_file, byte_path *p
             // Se o bit atual é 1, setamos o bit correspondente no novo byte
             if (current.path[i] == 1)
             {
+                /*
+                    Inicializamos o current_byte_index com 7 pois estamos percorrendo o byte da esquerda para a direita
+                    Ao realizar operações com bits, caso queiramos setar o bit mais à esquerda, precisamos setar o bit 7
+                    Exemplo:    00000001    (usamos como base o byte 1 em funções de bits)
+                                1 << 7      (setamos o bit mais à esquerda)
+                                10000000
+                                =
+                                10000000    (fazemos um OR bit a bit entre 10000000 e o new_byte atual = 00000000)
+                                00000000
+                                =
+                                10000000    (o new_byte agora é 10000000)
+
+                    Caso quiséssemos utilizar 0 como valor inicial, teríamos que passar (7 - current_byte_index) como argumento
+                */
                 new_byte = set_bit(new_byte, current_byte_index);
             }
 
-            // Avançamos para o próximo bit do novo byte (da direita para a esquerda)
+            // Avançamos para o próximo bit do novo byte
             current_byte_index--;
 
             // Se o byte está completo, escrevemos ele no arquivo
             if (current_byte_index < 0)
             {
                 fwrite(&new_byte, sizeof(uint8_t), 1, output_file);
+
+                // Printamos o byte que acabamos de escrever
+                // DEBUG_print_byte(new_byte);
+
                 current_byte_index = 7;
                 new_byte = 0;
             }
@@ -101,8 +144,25 @@ uint8_t write_compressed_bytes(FILE *input_file, FILE *output_file, byte_path *p
     if (current_byte_index < 7)
     {
         fwrite(&new_byte, sizeof(uint8_t), 1, output_file);
+
+        // DEBUG_print_byte_with_trash(new_byte, current_byte_index);
     }
 
-    // Calculamos o tamanho do lixo (quantidade de bits que não foram preenchidos no último byte)
-    return current_byte_index;
+    printf("📦 Bytes comprimidos escritos no arquivo!\n");
+
+    /*
+        Para retornarmos o tamanho do lixo corretamente, precisamos tomar cuidado com o fato de que estamos contando de 7 a 0.
+        Caso estivéssemos contando de 0 a 7, poderíamos realizar: 8 - current_byte_index
+        No entanto, como estamos contando de 7 a 0, precisamos realizar: current_byte_index + 1
+
+        Exemplo:
+        Caso o current_byte_index seja 3, um byte atual poderia ser: 1010[0000]
+            -   Após a escrita de 1: current_byte_index-- = 7 - 1 = 6
+            -   Após a escrita de 0: current_byte_index-- = 6 - 1 = 5
+            -   Após a escrita de 1: current_byte_index-- = 5 - 1 = 4
+            -   Após a escrita de 0: current_byte_index-- = 4 - 1 = 3
+        Neste caso, o tamanho do lixo seria 4, pois faltam 4 bits para completar o byte
+    */
+
+    return current_byte_index + 1;
 }

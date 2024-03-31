@@ -34,13 +34,43 @@ header_data *header_init(FILE *file)
     return header;
 }
 
-void header_write(FILE *file, header_data *data)
+void header_write_to_file(FILE *file, header_data *data)
 {
+    /*
+        Como o tamanho do lixo e o tamanho da árvore em pré-ordem são
+        armazenados em 2 bytes, precisamos combiná-los em um único valor
+
+        Para isso, utilizamos um operador OR bit a bit
+        Exemplo:    10100000 00000000   (tamanho do lixo = 5)
+                    00000000 00001011   (tamanho da árvore em pré-ordem = 11)
+                    -------------------
+                    10100000 00001011
+
+        Como o tamanho do lixo ocupa somente 3 primeiros bits, podemos
+        realizar o OR bit a bit com o tamanho da árvore em pré-ordem,
+        que ocupa os 13 bits restantes do primeiro byte do cabeçalho
+    */
     uint16_t header = data->trash_size | data->tree_size;
 
     uint8_t first_byte = header >> 8;
-    uint8_t second_byte = header & 0xFF; // equivalente a 255 em decimal (11111111 em binário)
+    /*
+        Exemplo:    10100000 00001011 >> 8
+                    00000000 10100000
 
+        Obtemos o byte 10100000, que é o primeiro byte do cabeçalho
+    */
+
+    uint8_t second_byte = header & 11111111;
+    /*
+        Exemplo:    10100000 00001011
+                    00000000 11111111 &
+                    -------------------
+                    00000000 00001011
+
+        Obtemos somente os 8 últimos do valor, que é o segundo byte do cabeçalho
+    */
+
+    // Movemos o cursor para o início do arquivo
     rewind(file);
 
     fwrite(&first_byte, sizeof(uint8_t), 1, file);
