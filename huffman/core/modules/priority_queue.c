@@ -73,7 +73,8 @@ void pq_enqueue(priority_queue *pq, const void *data)
     index = pq->size;
     pq->size++;
 
-    // O novo elemento é trocado com seu pai enquanto sua precedência for maior
+    // Reorganizamos a fila de prioridade a fim de restaurar a propriedade de heap
+    // Ou seja, o novo elemento troca de posição com seu pai enquanto sua precedência for maior
     while (index > 0 && pq->comparator(pq->data[index], pq->data[PARENT(index)]) > 0)
     {
         swap(&pq->data[index], &pq->data[PARENT(index)]);
@@ -117,44 +118,42 @@ void *pq_dequeue(priority_queue *pq)
  */
 void pq_heapify(priority_queue *pq, size_t index)
 {
-    NULL_POINTER_CHECK(pq);
-
     if (pq == NULL)
     {
         DEBUG("A fila de prioridade não foi inicializada.\n");
         return;
     }
 
-    size_t largest;
+    size_t largest_index;
 
     // Calculamos os índices dos filhos esquerdo e direito
-    size_t left = LEFT(index);
-    size_t right = RIGHT(index);
+    size_t left_index = LEFT(index);
+    size_t right_index = RIGHT(index);
 
     // Verificamos se o filho esquerdo é maior que o pai
-    if (left < pq->size && pq->comparator(pq->data[left], pq->data[index]) > 0)
+    if (left_index < pq->size && pq->comparator(pq->data[left_index], pq->data[index]) > 0)
     {
-        largest = left;
+        largest_index = left_index;
     }
     else
     {
-        largest = index;
+        largest_index = index;
     }
 
     // Verificamos se o filho direito é maior que o maior entre o pai e o filho esquerdo
-    if (right < pq->size && pq->comparator(pq->data[right], pq->data[largest]) > 0)
+    if (right_index < pq->size && pq->comparator(pq->data[right_index], pq->data[largest_index]) > 0)
     {
-        largest = right;
+        largest_index = right_index;
     }
 
     // A esse ponto, o maior elemento entre o pai e os filhos foi encontrado
-    if (largest != index)
+    // Portanto, se o maior elemento não for o pai, trocamos o pai com o maior elemento
+    if (largest_index != index)
     {
-        // Portanto, se o maior elemento não for o pai, trocamos o pai com o maior elemento
-        swap(&pq->data[index], &pq->data[largest]);
+        swap(&pq->data[index], &pq->data[largest_index]);
 
         // Chamamos a função recursivamente para o filho que foi trocado
-        pq_heapify(pq, largest);
+        pq_heapify(pq, largest_index);
     }
 }
 

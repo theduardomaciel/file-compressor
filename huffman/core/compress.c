@@ -95,7 +95,7 @@ uint8_t write_compressed_bytes(FILE *input_file, FILE *output_file, byte_path *p
     uint8_t new_byte = 0;
 
     // Percorremos cada byte do arquivo
-    printf("Bytes escritos no arquivo:\n");
+    // printf("Bytes escritos no arquivo:\n");
     while (fread(&current_byte, sizeof(uint8_t), 1, input_file) == 1)
     {
         byte_path current = paths[current_byte];

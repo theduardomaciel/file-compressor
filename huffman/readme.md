@@ -81,6 +81,11 @@ Devido a problemas com a importação e compilação dos arquivos por meio do ar
 
 <br />
 
+## 🐞 Debug
+
+Ao utilizar a depuração por meio do arquivo `launch.json` presente na pasta `vscode`, certifique-se de não ter nenhum outro terminal aberto ao executar o programa pela depuração.  
+Além disso, não se esqueça de alterar o nome do arquivo no parâmetro _args_ do `launch.json`
+
 ## 🚧 Roadmap
 
 - [x] Desenvolver os módulos de `stack`, `priority_queue` e `huffman_tree` para utilização nos processos de compressão e descompressão

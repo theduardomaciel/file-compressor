@@ -75,8 +75,8 @@ int ht_get_tree_size(huffman_node *root)
     // Iniciamos um contador para o nó atual
     int size = 1;
 
-    // Caso o nó atual seja uma folha que pode ser confundida com um nó interno,
-    // incrementamos o tamanho em +1 pois adicionamos um caractere de escape ao escrever a árvore em pré-ordem
+    // Caso o nó atual seja uma folha que pode ser confundida com um nó interno, incrementamos o
+    // tamanho em +1 pois adicionamos um caractere de escape quando escrevemos a árvore em pré-ordem
     if (is_leaf(root) && is_scaped_char(root))
     {
         size++;

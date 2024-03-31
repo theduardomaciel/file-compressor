@@ -15,6 +15,15 @@
  */
 void decompress(FILE *input, char *output_path);
 
+/**
+ * Descomprime os bytes, escrevendo os correspondentes originais no arquivo de saída.
+ *
+ * @param output_file O ponteiro para o arquivo de saída.
+ * @param tree A árvore de Huffman.
+ * @param current_node O endereço do nó atual na árvore de Huffman.
+ * @param byte O byte a ser escrito.
+ * @param end_bit Até que bit do byte devemos ler.
+ */
 void write_original_bytes(FILE *output_file, huffman_node *tree, huffman_node **current_node, uint8_t byte, uint8_t end_bit);
 
 #endif // DECOMPRESS_H

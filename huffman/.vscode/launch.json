@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${fileDirname}/${fileBasenameNoExtension}",
-            "args": ["key.mp4"],
+            "args": ["key.mp4.huff"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
