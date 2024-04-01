@@ -15,12 +15,12 @@ void compress(FILE *input_file, char *input_extension, char *output_path)
 
     // 4. Construímos o dicionário que armazena os bytes comprimidos em seus respectivos bytes originais
 
-    byte_path paths[MAX_SIZE] = {0}; // Array de byte_path's para armazenar os caminhos de cada byte na árvore de Huffman
-    uint8_t current_path[MAX_SIZE];  // Array para armazenar o caminho atual durante a recursão
+    byte_path paths_dictionary[MAX_SIZE] = {0}; // Array de byte_path's para armazenar os caminhos de cada byte na árvore de Huffman
+    uint8_t current_path[MAX_SIZE];             // Array para armazenar o caminho atual durante a recursão
 
     // Chamada da função para gerar os caminhos de cada byte na árvore de Huffman
-    build_bytes_dictionary(tree, paths, current_path, 0);
-    // DEBUG_dictionary(paths);
+    build_bytes_dictionary(tree, paths_dictionary, current_path, 0);
+    // DEBUG_dictionary(paths_dictionary);
 
     // 5. Criamos o arquivo de saída
     FILE *output_file = open_file(output_path, "wb");
@@ -55,13 +55,16 @@ void compress(FILE *input_file, char *input_extension, char *output_path)
     fwrite(input_extension, sizeof(char), extension_length, output_file);
     // podia ser: fputs(input_extension, output_file);
 
-    // 6.3 Escrevemos os bytes comprimidos (obtidos com base no dicionário) no arquivo
-    int trash_size = write_compressed_bytes(input_file, output_file, paths);
+    // 7 Escrevemos os bytes comprimidos (obtidos com base no dicionário) no arquivo
+    int trash_size = write_compressed_bytes(input_file, output_file, paths_dictionary);
 
-    // 6.4 Sobrescrevemos o espaço reservado no arquivo (2 bytes) anteriormente com os dados reais
+    // 7.1 Movemos o cursor para o início do arquivo
+    rewind(output_file);
+
+    // 8 Sobrescrevemos o espaço reservado no arquivo (2 bytes) anteriormente com os dados reais
     header_data *header = header_init();
 
-    // 6.4.1 Para isso, inserimos o tamanho do lixo (quantidade de bits que não foram preenchidos no último byte)
+    // 8.1 Para isso, inserimos o tamanho do lixo (quantidade de bits que não foram preenchidos no último byte)
     header->trash_size = trash_size << 13;
     /*
         Realizamos um shift de 13 bits para a esquerda pois o tamanho do lixo
@@ -69,13 +72,13 @@ void compress(FILE *input_file, char *input_extension, char *output_path)
         16 bits (2 bytes) - 3 bits (tamanho do lixo) = 13 bits
     */
 
-    // 6.4.2 E o tamanho da árvore de Huffman em pré-ordem
+    // 8.2 E o tamanho da árvore de Huffman em pré-ordem
     header->tree_size = ht_get_tree_size(tree);
 
     printf("🗑️  Tamanho do lixo: %d\n", trash_size);
     printf("📏🌳 Tamanho da árvore: %d\n", header->tree_size);
 
-    // 6.4.3 Preenchemos os espaços reservados no cabeçalho (header) do arquivo
+    // 8.3 Preenchemos os espaços reservados no cabeçalho (header) do arquivo
     header_write_to_file(output_file, header);
 
     close_file(output_file);
@@ -105,7 +108,7 @@ void DEBUG_print_byte_with_trash(uint8_t byte, int current_byte_index)
     printf("\n");
 }
 
-uint8_t write_compressed_bytes(FILE *input_file, FILE *output_file, byte_path *paths)
+uint8_t write_compressed_bytes(FILE *input_file, FILE *output_file, byte_path *paths_dictionary)
 {
     // Para isso, precisamos percorrer o arquivo de entrada byte a byte e, para cada byte, percorrer o dicionário para obter o caminho correspondente
     uint8_t current_byte;
@@ -118,9 +121,9 @@ uint8_t write_compressed_bytes(FILE *input_file, FILE *output_file, byte_path *p
     // printf("Bytes escritos no arquivo:\n");
     while (fread(&current_byte, sizeof(uint8_t), 1, input_file) == 1)
     {
-        byte_path current = paths[current_byte];
+        byte_path current = paths_dictionary[current_byte];
 
-        // Percorremos cada bit (8 no total) do byte atual
+        // Percorremos cada bit do byte atual
         for (int i = 0; i < current.path_length; i++)
         {
             // Se o bit atual é 1, setamos o bit correspondente no novo byte

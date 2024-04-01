@@ -75,9 +75,6 @@ void header_write_to_file(FILE *file, header_data *data)
         Para mais informações sobre máscaras de bits, leia `docs/masks.md`
     */
 
-    // Movemos o cursor para o início do arquivo
-    rewind(file);
-
     fwrite(&first_byte, sizeof(uint8_t), 1, file);
     fwrite(&second_byte, sizeof(uint8_t), 1, file);
 
@@ -160,7 +157,7 @@ header_data *header_read(FILE *file)
         Exemplo:    00000000 00000010 << 8  (como tree_size é um uint16_t, o shift bit não é truncado)
 
                     00000000 00000010
-                    00000000 00000100       (1)
+                    00000000 00000100 (1)
                     00000000 00001000 (2)
                     00000000 00010000 (3)
                     00000000 00100000 (4)

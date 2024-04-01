@@ -22,7 +22,9 @@
         "file_io.h": "c",
         "cstring": "c",
         "locale": "c",
-        "header.h": "c"
+        "header.h": "c",
+        "chrono": "c",
+        "variant": "c"
     },
     "cSpell.words": [
         "huffman"

@@ -17,7 +17,7 @@ uint64_t *build_frequency_table(FILE *input)
         frequency_table[current_byte]++;
     }
 
-    // Voltamos o ponteiro do arquivo para o início
+    // Voltamos o cursor do arquivo para o início
     fseek(input, 0, SEEK_SET);
     /*
         Poderíamos utilizar a função rewind(input), mas optamos por utilizar fseek para fins de aprendizado

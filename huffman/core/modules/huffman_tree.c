@@ -130,15 +130,17 @@ huffman_node *build_huffman_tree(priority_queue *queue)
 huffman_node *rebuild_huffman_tree(uint8_t **pre_order_tree)
 {
     // Alocamos espaço para armazenar o símbolo atual da árvore
-    uint8_t *item = malloc(sizeof(uint8_t));
-    uint8_t *current_symbol = *pre_order_tree; // Obtém o símbolo atual da árvore
+    uint8_t *data = malloc(sizeof(uint8_t));
 
-    // Obs.: Ao utilizar (*pre_order_tree)++ estamos avançando para o próximo símbolo
+    // Obtém o símbolo atual da árvore
+    uint8_t *current_symbol = *pre_order_tree;
+
+    // Obs.: Ao utilizar (*pre_order_tree)++ estamos avançando para o próximo byte da array de bytes da árvore em pré-ordem
 
     // Se o símbolo atual for '*', indica um nó interno
     if (*current_symbol == '*')
     {
-        *item = '*';
+        *data = '*';
         (*pre_order_tree)++;
 
         // Reconstruímos as subárvores esquerda e direita recursivamente
@@ -146,27 +148,27 @@ huffman_node *rebuild_huffman_tree(uint8_t **pre_order_tree)
         huffman_node *right = rebuild_huffman_tree(pre_order_tree);
 
         // Criamos um nó com as subárvores esquerda e direita
-        return ht_create_node((void *)item, 0, left, right);
+        return ht_create_node((void *)data, 0, left, right);
     }
     else
     {
         // Se o símbolo atual for '\', indica que o próximo símbolo é um caractere especial,
-        // portanto, avançamos para o próximo símbolo e o armazenamos em item
+        // portanto, avançamos para o próximo símbolo e o armazenamos em data
         if (*current_symbol == '\\')
         {
             (*pre_order_tree)++;
-            *item = **pre_order_tree;
+            *data = **pre_order_tree;
             (*pre_order_tree)++;
         }
         else
         {
-            // Caso contrário, o símbolo atual é um caractere normal, então o armazenamos em item e avançamos para o próximo símbolo
-            *item = *current_symbol;
+            // Caso contrário, o símbolo atual é um caractere normal, então o armazenamos em data e avançamos para o próximo símbolo
+            *data = *current_symbol;
             (*pre_order_tree)++;
         }
 
         // Criamos e retornamos um nó da árvore de Huffman com o símbolo atual
-        huffman_node *node = ht_create_node((void *)item, 0, NULL, NULL);
+        huffman_node *node = ht_create_node((void *)data, 0, NULL, NULL);
         return node;
     }
 }

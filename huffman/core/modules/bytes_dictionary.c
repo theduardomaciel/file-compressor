@@ -9,7 +9,7 @@ void build_bytes_dictionary(huffman_node *node, byte_path paths[MAX_SIZE], uint8
 
     if (is_leaf(node))
     {
-        // Se o nó atual é uma folha, armazena o caminho do byte no array de byte_path
+        // Se o nó atual é uma folha, armazenamos o caminho do byte no array de byte_path
         uint8_t leaf_byte = *(uint8_t *)node->data;
         paths[leaf_byte].path_length = depth;
         for (int i = 0; i < depth; i++)
@@ -19,7 +19,7 @@ void build_bytes_dictionary(huffman_node *node, byte_path paths[MAX_SIZE], uint8
     }
     else
     {
-        // Se o nó atual não é uma folha, continua a recursão para os nós filhos
+        // Se o nó atual não é uma folha, continuamos a recursão para os nós filhos
 
         current_path[depth] = 0; // 0 indica caminho à esquerda
         build_bytes_dictionary(node->left, paths, current_path, depth + 1);

@@ -9,7 +9,7 @@
 typedef struct header_data
 {
     char *extension;
-    size_t file_size;
+    size_t file_size; // Tamanho dos bytes comprimidos
     uint16_t trash_size;
     uint16_t tree_size; // Tamanho da árvore em pré-ordem
     uint8_t *preorder_tree;
