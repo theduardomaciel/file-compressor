@@ -152,20 +152,16 @@ huffman_node *rebuild_huffman_tree(uint8_t **pre_order_tree)
     }
     else
     {
-        // Se o símbolo atual for '\', indica que o próximo símbolo é um caractere especial,
-        // portanto, avançamos para o próximo símbolo e o armazenamos em data
+        // Se o símbolo atual for '\', indica que o próximo símbolo é usomente um nó folha que pode ser
+        // confundido com um nó interno, portanto, pulamos o caractere '\' e avançamos para o próximo byte
         if (*current_symbol == '\\')
         {
             (*pre_order_tree)++;
-            *data = **pre_order_tree;
-            (*pre_order_tree)++;
         }
-        else
-        {
-            // Caso contrário, o símbolo atual é um caractere normal, então o armazenamos em data e avançamos para o próximo símbolo
-            *data = *current_symbol;
-            (*pre_order_tree)++;
-        }
+
+        *data = **pre_order_tree;
+
+        (*pre_order_tree)++;
 
         // Criamos e retornamos um nó da árvore de Huffman com o símbolo atual
         huffman_node *node = ht_create_node((void *)data, 0, NULL, NULL);
